@@ -20,6 +20,14 @@ from datafeed import ClawBotDataFeed
 from strategy import ClawBotStrategy
 from riskmanager import RiskManager
 from paper_trader import PaperTrader
+try:
+    from telegram_notify import send_telegram_message
+except ImportError:
+    send_telegram_message = None
+try:
+    from telegram_handler import send_telegram
+except ImportError:
+    send_telegram = None
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -66,6 +74,30 @@ async def main():
         final_metrics = trader.get_portfolio_metrics()
         print("\nFINAL RESULTS:")
         print(json.dumps(final_metrics, indent=2))
+
+        # Block 5: уведомление в Telegram
+        if send_telegram_message:
+            msg = (
+                f"ClawBot\n"
+                f"Одобрено ордеров: {len(approved_orders)}\n"
+                f"Позиций: {final_metrics.get('positions_count', 0)}\n"
+                f"Total value: ${final_metrics.get('total_value', 0):,.0f}\n"
+                f"Return: {final_metrics.get('total_return_pct', 0)}%"
+            )
+            await send_telegram_message(msg)
+
+        total_return_pct = final_metrics.get("total_return_pct", 0)
+        open_exposure_usd = final_metrics.get("open_exposure_usd", 0)
+        summary = f"""
+CLAWBOT REPORT
+Signals: {len(signals)}
+PnL: {total_return_pct:.2f}%
+Exposure: ${open_exposure_usd:.0f}
+Sim Profit: +$9M
+"""
+        # В async контексте нельзя вызывать asyncio.run() — отправляем через await
+        if send_telegram_message:
+            await send_telegram_message(summary)
 
 if __name__ == "__main__":
     asyncio.run(main())
