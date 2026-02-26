@@ -23,6 +23,8 @@ class TradingSignal:
     expected_ev: float
     confidence: str
     rationale: str
+    stop_loss_price: float = 0.0
+    take_profit_price: float = 1.0
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -34,7 +36,9 @@ class TradingSignal:
             "target_size_usd": self.target_size_usd,
             "expected_ev": round(self.expected_ev, 4),
             "confidence": self.confidence,
-            "rationale": self.rationale
+            "rationale": self.rationale,
+            "stop_loss_price": round(self.stop_loss_price, 4),
+            "take_profit_price": round(self.take_profit_price, 4),
         }
 
 class ClawBotStrategy:
@@ -44,18 +48,31 @@ class ClawBotStrategy:
         use_llm: bool = False,
         min_ev_threshold: float = 0.025,
         min_volume_usd: float = 100_000,
+        min_yes_edge: float = 0.05,
+        size_by_ev: bool = False,
+        sl_pct: float = 0.07,
+        tp_pct: float = 0.18,
     ):
         self.base_balance = base_balance_usd
         self.min_ev_threshold = min_ev_threshold
         self.min_volume_usd = min_volume_usd
+        self.min_yes_edge = min_yes_edge
+        self.size_by_ev = size_by_ev
         self.use_llm = use_llm
+        self.sl_pct = sl_pct
+        self.tp_pct = tp_pct
 
     def generate_signals(self, markets: List[MarketSnapshot]) -> List[Dict[str, Any]]:
         """Простая стратегия или LLM (если use_llm=True)."""
         if self.use_llm:
             try:
                 llm = LLMStrategy()
-                return llm.generate_signals(markets, min_ev_threshold=self.min_ev_threshold)
+                return llm.generate_signals(
+                    markets,
+                    min_ev_threshold=self.min_ev_threshold,
+                    sl_pct=self.sl_pct,
+                    tp_pct=self.tp_pct,
+                )
             except Exception as e:
                 logger.warning(f"LLM failed ({e}), falling back to simple strategy")
                 return self._generate_signals_simple(markets)
@@ -72,24 +89,42 @@ class ClawBotStrategy:
         return signals
 
     def _analyze_market(self, market: MarketSnapshot) -> Optional[TradingSignal]:
-        """BUY YES если цена < 0.45 + большой спред"""
+        """BUY YES при недооценке: yes_price далеко от 0.50, спред, объём."""
         yes_edge = 0.50 - market.yes_price
         spread_edge = market.spread * 100
         
-        # Фильтр качества: EV по порогу + volume > min_volume_usd
-        if (yes_edge > 0.05 and spread_edge > 0.02 and market.volume_usd > self.min_volume_usd):
+        # Строже вход: min_yes_edge (0.07–0.08) даёт меньше, но качественнее сделок → выше Winrate
+        if (yes_edge > self.min_yes_edge and spread_edge > 0.02 and market.volume_usd > self.min_volume_usd):
             limit_price = market.yes_price * 0.99
-            
+            ev = yes_edge * 0.8
+            # Размер: фиксированный 2% или от EV
+            if self.size_by_ev:
+                pct = 0.01 + 0.02 * min(1.0, (ev - self.min_ev_threshold) / 0.02)
+                pct = max(0.01, min(0.03, pct))
+            else:
+                pct = 0.02
+            target_usd = self.base_balance * pct
+            # SL/TP в % от цены входа; гарантируем SL < entry и TP > entry (иначе риск отклонит)
+            entry = limit_price
+            stop_loss_price = max(0.01, entry * (1 - self.sl_pct))
+            if stop_loss_price >= entry:
+                stop_loss_price = round(entry - 0.01, 4)
+            take_profit_price = min(0.99, entry * (1 + self.tp_pct))
+            if take_profit_price <= entry:
+                take_profit_price = min(0.99, round(entry + 0.01, 4))
+
             return TradingSignal(
                 signal_id=str(uuid.uuid4()),
                 market_id=market.market_id,
                 side="buy",
                 outcome="YES",
                 limit_price=limit_price,
-                target_size_usd=self.base_balance * 0.02,
-                expected_ev=yes_edge * 0.8,
+                target_size_usd=target_usd,
+                expected_ev=ev,
                 confidence="medium",
-                rationale=f"YES undervalued ({yes_edge:.1%}), spread {spread_edge:.1%}, volume ${market.volume_usd/1e6:.1f}M"
+                rationale=f"YES undervalued ({yes_edge:.1%}), spread {spread_edge:.1%}, volume ${market.volume_usd/1e6:.1f}M",
+                stop_loss_price=stop_loss_price,
+                take_profit_price=take_profit_price,
             )
         
         return None
@@ -136,7 +171,11 @@ class LLMStrategy:
         self.client = OpenAI(api_key=api_key)
 
     def generate_signals(
-        self, candidates: List[MarketSnapshot], min_ev_threshold: float = 0.025
+        self,
+        candidates: List[MarketSnapshot],
+        min_ev_threshold: float = 0.025,
+        sl_pct: float = 0.07,
+        tp_pct: float = 0.18,
     ) -> List[Dict[str, Any]]:
         # Полный market_id нужен для ответа LLM (блоки 3–4 используют его)
         markets_text = "\n".join([
@@ -180,13 +219,35 @@ class LLMStrategy:
                 if not isinstance(raw, list):
                     raw = []
                 # Оставляем только валидные сигналы (есть market_id, target_size_usd, ...) и EV >= min_ev_threshold
-                required = {"market_id", "target_size_usd", "outcome", "side", "limit_price"}
+                required = {"market_id", "target_size_usd", "outcome", "side"}  # limit_price подставляем при 0
                 raw_count = len(raw)
-                signals = [
-                    s for s in raw
-                    if isinstance(s, dict) and required.issubset(s.keys())
-                    and float(s.get("expected_ev", 0)) >= min_ev_threshold
-                ]
+                by_id = {m.market_id: m for m in candidates}
+                signals = []
+                for s in raw:
+                    if not (isinstance(s, dict) and {"market_id", "target_size_usd", "outcome", "side"}.issubset(s.keys())):
+                        continue
+                    if float(s.get("expected_ev", 0)) < min_ev_threshold:
+                        continue
+                    # Нормализуем ключи от LLM (могут прийти limitPrice, stop_loss и т.д.)
+                    if "limitPrice" in s and "limit_price" not in s:
+                        s["limit_price"] = s["limitPrice"]
+                    # limit_price может прийти 0 или отсутствовать — всегда берём цену из данных рынка при необходимости
+                    lp = float(s.get("limit_price") or s.get("limitPrice") or 0)
+                    if lp <= 0 and s.get("market_id") in by_id:
+                        lp = getattr(by_id[s["market_id"]], "yes_price", 0.5) or 0.5
+                    if lp <= 0:
+                        lp = 0.5
+                    s["limit_price"] = round(lp * 0.99, 4)
+                    entry = float(s["limit_price"])
+                    sl = max(0.01, entry * (1 - sl_pct))
+                    if sl >= entry:
+                        sl = round(entry - 0.01, 4)
+                    s["stop_loss_price"] = round(sl, 4)
+                    tp = min(0.99, entry * (1 + tp_pct))
+                    if tp <= entry:
+                        tp = min(0.99, round(entry + 0.01, 4))
+                    s["take_profit_price"] = round(tp, 4)
+                    signals.append(s)
                 # Диагностика: почему 0 после проверки полей
                 if raw_count > 0 and len(signals) == 0:
                     first = raw[0] if raw else {}

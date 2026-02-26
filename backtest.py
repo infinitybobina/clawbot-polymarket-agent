@@ -125,6 +125,14 @@ class Backtester:
     min_ev_threshold: float = 0.025
     min_volume_usd: float = 100_000
     max_single_market_pct: float = 0.04
+    # Улучшение Winrate/Profit/Sharpe: строже вход, топ-N сигналов в час
+    min_yes_edge: float = 0.07
+    max_signals_per_hour: int = 2
+    size_by_ev: bool = True
+    # Порог импульса: пропускать рынок, если цена за час упала больше чем на momentum_threshold (0 = только рост)
+    momentum_threshold: float = 0.02
+    # Seed для симуляции цен (разные seed → разные сценарии; 90-дневные результаты от него сильно зависят)
+    price_seed: Optional[int] = 42
 
     def __post_init__(self):
         self.balance = self.initial_balance
@@ -142,19 +150,22 @@ class Backtester:
             use_llm=self.use_llm,
             min_ev_threshold=self.min_ev_threshold,
             min_volume_usd=self.min_volume_usd,
+            min_yes_edge=self.min_yes_edge,
+            size_by_ev=self.size_by_ev,
         )
         self._prepare_historical()
 
     def _prepare_historical(self) -> None:
-        """Генерирует 720 часов цен по N рынкам (реалистичная симуляция)."""
+        """Генерирует N*24 часов цен по N рынкам (реалистичная симуляция). Разные price_seed дают разные сценарии."""
         n_hours = self.days * 24
+        base = self.price_seed if self.price_seed is not None else 42
         for i in range(self.n_markets):
             mid = f"0xmarket_{i:04d}"
             self.market_ids.append(mid)
             self.prices_by_market[mid] = _simulate_hourly_prices(
-                n_hours, start_price=0.45 + i * 0.02, seed=42 + i
+                n_hours, start_price=0.45 + i * 0.02, seed=base + i
             )
-        logger.info("Historical data: %d markets x %d hours", self.n_markets, n_hours)
+        logger.info("Historical data: %d markets x %d hours (seed=%s)", self.n_markets, n_hours, base)
 
     def run(self, days: Optional[int] = None) -> Dict[str, Any]:
         """Запуск бэктеста: цикл по часам, вызов стратегии/риска/исполнения, обновление PnL."""
@@ -169,10 +180,18 @@ class Backtester:
             )
             if not snapshots:
                 continue
+            # Фильтр импульса: не покупать, если цена упала за час больше чем на momentum_threshold
+            if hour > 0 and self.momentum_threshold is not None:
+                snapshots = [
+                    s for s in snapshots
+                    if self.prices_by_market[s.market_id][hour] >= self.prices_by_market[s.market_id][hour - 1] - self.momentum_threshold
+                ]
             top = sorted(snapshots, key=lambda m: m.spread, reverse=True)[: self.n_markets]
 
-            # 2. Сигналы (простая стратегия, без LLM)
+            # 2. Сигналы; берём только топ по EV (меньше шума → выше Winrate/Sharpe)
             signals = self.strategy.generate_signals(top)
+            if signals:
+                signals = sorted(signals, key=lambda s: float(s.get("expected_ev", 0)), reverse=True)[: self.max_signals_per_hour]
             approved = []
             if signals:
                 # 3. Risk Manager
@@ -275,8 +294,10 @@ TEST_PRESETS = {
         "min_ev_threshold": 0.03,
         "min_volume_usd": 500_000,
         "max_single_market_pct": 0.03,
-        "max_category_pct": 0.36,   # 12 × 3%
+        "max_category_pct": 0.36,
         "max_exposure_pct": 0.36,
+        "momentum_threshold": 0.02,  # порог импульса: 0 = только рост, 0.02 = допуск падения 2%
+        "min_yes_edge": 0.08,
     },
 }
 
@@ -284,12 +305,27 @@ TEST_PRESETS = {
 if __name__ == "__main__":
     import sys
     logging.basicConfig(level=logging.WARNING)
-    days = int(sys.argv[1]) if len(sys.argv) > 1 and sys.argv[1].isdigit() else 30
-    preset_name = sys.argv[2] if len(sys.argv) > 2 else None
-    use_llm = "llm" in [x.lower() for x in sys.argv]
+    argv = sys.argv[1:]
+    days = 30
+    if argv and argv[0].isdigit():
+        days = int(argv[0])
+        argv = argv[1:]
+    preset_name = argv[0] if argv and argv[0].upper() in TEST_PRESETS else None
+    if preset_name:
+        argv = argv[1:]
+    use_llm = "llm" in [x.lower() for x in argv]
+    # Порог импульса из аргумента: m0.02 или m0.01
+    momentum_override = None
+    for a in argv:
+        if a.lower().startswith("m") and len(a) > 1:
+            try:
+                momentum_override = float(a[1:])
+                break
+            except ValueError:
+                pass
     if preset_name and preset_name.upper() in TEST_PRESETS:
         preset = TEST_PRESETS[preset_name.upper()]
-        bt = Backtester(
+        kw = dict(
             days=days,
             n_markets=preset["n_markets"],
             min_ev_threshold=preset["min_ev_threshold"],
@@ -297,12 +333,23 @@ if __name__ == "__main__":
             max_single_market_pct=preset["max_single_market_pct"],
             use_llm=use_llm,
         )
+        if "momentum_threshold" in preset:
+            kw["momentum_threshold"] = preset["momentum_threshold"]
+        if "min_yes_edge" in preset:
+            kw["min_yes_edge"] = preset["min_yes_edge"]
+        if momentum_override is not None:
+            kw["momentum_threshold"] = momentum_override
+        bt = Backtester(**kw)
         bt.risk_mgr.config["max_category_pct"] = preset["max_category_pct"]
         bt.risk_mgr.config["max_exposure_pct"] = preset["max_exposure_pct"]
         llm_tag = " + LLM" if use_llm else ""
-        print(f"Test {preset_name}{llm_tag}: EV={preset['min_ev_threshold']:.0%}, Vol>${preset['min_volume_usd']/1e3:.0f}k, Risk={preset['max_single_market_pct']:.0%}")
+        mom = momentum_override if momentum_override is not None else preset.get("momentum_threshold", 0.02)
+        print(f"Test {preset_name}{llm_tag}: EV={preset['min_ev_threshold']:.0%}, Vol>${preset['min_volume_usd']/1e3:.0f}k, Risk={preset['max_single_market_pct']:.0%}, momentum={mom}")
     else:
-        bt = Backtester(days=days)
+        kw = dict(days=days)
+        if momentum_override is not None:
+            kw["momentum_threshold"] = momentum_override
+        bt = Backtester(**kw)
     result = bt.run()
     print(f"Backtest result ({days} days):")
     for k, v in result.items():

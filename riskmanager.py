@@ -18,6 +18,8 @@ class RejectReason(Enum):
     EXCEEDED_CATEGORY_EXPOSURE = "EXCEEDED_CATEGORY_EXPOSURE"
     TOTAL_EXPOSURE_TOO_HIGH = "TOTAL_EXPOSURE_TOO_HIGH"
     DAILY_LOSS_LIMIT = "DAILY_LOSS_LIMIT_REACHED"
+    INVALID_SL_TP = "INVALID_SL_TP_LEVELS"
+    RISK_PER_TRADE_EXCEEDED = "RISK_PER_TRADE_EXCEEDED"
     OK = "OK"
 
 @dataclass
@@ -69,15 +71,78 @@ class RiskManager:
 
     def _evaluate_signal(self, signal: Dict[str, Any]) -> Dict[str, Any]:
         """Проверки по порядку приоритета"""
-        target_size = signal["target_size_usd"]
+        target_size = float(signal["target_size_usd"])
         market_id = signal["market_id"]
-        category = "US-current-affairs"  # TODO: из Gamma
-        
-        # 1. SINGLE_POSITION
-        new_size = self.portfolio.positions.get(market_id, 0) + target_size
-        if new_size > self.portfolio.balance_usd * self.config["max_single_market_pct"]:
+        category = "US-current-affairs"
+        entry = float(signal.get("limit_price") or 0)
+        stop_loss_price = float(signal.get("stop_loss_price") or 0)
+        take_profit_price = float(signal.get("take_profit_price") or 1)
+        logger.info("Risk eval: entry=%.4f sl=%.4f tp=%.4f", entry, stop_loss_price, take_profit_price)
+
+        # 0. SL/TP: при невалидных уровнях или плохом ratio — пересчитываем по конфигу
+        eps = 1e-6
+        sl_pct = self.config.get("sl_pct", 0.07)
+        tp_pct = self.config.get("tp_pct", 0.18)
+        min_rr = self.config.get("min_reward_risk_ratio", 1.5)
+
+        def _recompute_sl_tp():
+            nonlocal stop_loss_price, take_profit_price
+            stop_loss_price = max(0.01, entry * (1 - sl_pct))
+            if stop_loss_price >= entry:
+                stop_loss_price = round(entry - 0.01, 4)
+            take_profit_price = min(0.99, entry * (1 + tp_pct))
+            if take_profit_price <= entry:
+                take_profit_price = min(0.99, round(entry + 0.01, 4))
+            logger.info("Risk: SL/TP пересчитаны по конфигу: entry=%.4f sl=%.4f tp=%.4f", entry, stop_loss_price, take_profit_price)
+
+        if entry <= 0:
+            entry = 0.5
+            logger.info("Risk: entry был 0, подставлен default 0.5")
+            _recompute_sl_tp()
+        elif stop_loss_price >= entry - eps or take_profit_price <= entry + eps:
+            _recompute_sl_tp()
+        reward = take_profit_price - entry
+        risk_dist = entry - stop_loss_price
+        if risk_dist <= 0:
+            logger.warning("Risk: INVALID_SL_TP — risk_dist<=0 (entry=%.4f sl=%.4f)", entry, stop_loss_price)
+            return {"status": "rejected", "reason": RejectReason.INVALID_SL_TP.value}
+        ratio = (reward / risk_dist) if risk_dist else 0
+        high_entry_threshold = self.config.get("high_entry_ratio_exempt", 0.95)
+        require_rr = entry < high_entry_threshold  # при entry >= 0.95 не требуем min_rr (TP у потолка)
+        if reward > 0 and ratio < min_rr and require_rr:
+            _recompute_sl_tp()
+            reward = take_profit_price - entry
+            risk_dist = entry - stop_loss_price
+            ratio = (reward / risk_dist) if risk_dist else 0
+            if risk_dist <= 0:
+                logger.warning("Risk: INVALID_SL_TP — после пересчёта risk_dist<=0")
+                return {"status": "rejected", "reason": RejectReason.INVALID_SL_TP.value}
+            if reward > 0 and ratio < min_rr and entry < high_entry_threshold:
+                logger.warning("Risk: INVALID_SL_TP — ratio=%.2f < min_rr=%.1f (entry=%.4f sl=%.4f tp=%.4f)", ratio, min_rr, entry, stop_loss_price, take_profit_price)
+                return {"status": "rejected", "reason": RejectReason.INVALID_SL_TP.value}
+        if reward > 0 and ratio < min_rr and entry >= high_entry_threshold:
+            logger.info("Risk: entry=%.2f >= %.2f — ratio не проверяем (TP у потолка), пропускаем", entry, high_entry_threshold)
+        # Денежный риск при срабатывании SL
+        risk_usd = target_size * (entry - stop_loss_price) / entry if entry > 0 else 0
+        max_risk_usd = self.portfolio.balance_usd * self.config["max_single_market_pct"]
+        if risk_usd > max_risk_usd:
+            # Уменьшаем размер так, чтобы risk_usd = max_risk_usd
+            target_size = max_risk_usd * entry / (entry - stop_loss_price) if risk_dist > 0 else 0
+            if target_size < 50:  # минимум $50 на сделку (ослаблено)
+                return {"status": "rejected", "reason": RejectReason.RISK_PER_TRADE_EXCEEDED.value}
+            risk_usd = max_risk_usd
+
+        # 1. SINGLE_POSITION — подрезаем размер до лимита вместо отклонения
+        max_single = self.portfolio.balance_usd * self.config["max_single_market_pct"]
+        current_in_market = self.portfolio.positions.get(market_id, 0)
+        room = max(0, max_single - current_in_market)
+        if room < 50:
             return {"status": "rejected", "reason": RejectReason.EXCEEDED_SINGLE_POSITION.value}
-        
+        if target_size > room:
+            target_size = room
+            logger.info("Risk: размер подрезан до лимита по рынку: %.0f USD", target_size)
+        new_size = current_in_market + target_size
+
         # 2. CATEGORY_EXPOSURE
         cat_exposure = self.portfolio.exposure_by_category.get(category, 0) + target_size
         if cat_exposure > self.portfolio.balance_usd * self.config["max_category_pct"]:
@@ -101,8 +166,11 @@ class RiskManager:
             "status": "approved",
             "order": {
                 **signal,
-                "final_size_usd": target_size,  # можно подрезать, если нужно
-                "impact": "low"
+                "limit_price": entry,
+                "final_size_usd": target_size,
+                "stop_loss_price": stop_loss_price,
+                "take_profit_price": take_profit_price,
+                "impact": "low",
             }
         }
 

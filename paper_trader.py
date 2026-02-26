@@ -52,18 +52,32 @@ class PaperTrader:
                     fill_price = safe_price * random.uniform(1.00, 1.03)
 
             tokens_bought = size_usd / fill_price
+            sl = float(order.get("stop_loss_price") or 0)
+            tp = float(order.get("take_profit_price") or 1)
 
-            # Записываем / усредняем позицию
+            # Записываем / усредняем позицию; SL/TP задаём при открытии, при допокупке не меняем
             if market_id not in self.positions:
-                self.positions[market_id] = {"outcome": outcome, "size_tokens": 0.0, "avg_price": 0.0}
+                self.positions[market_id] = {
+                    "outcome": outcome,
+                    "size_tokens": 0.0,
+                    "avg_price": 0.0,
+                    "stop_loss_price": sl if sl > 0 else None,
+                    "take_profit_price": tp if tp > 0 else None,
+                }
 
             pos = self.positions[market_id]
             prev_tokens = float(pos.get("size_tokens", 0.0))
             prev_avg = float(pos.get("avg_price", 0.0))
             new_tokens = prev_tokens + tokens_bought
             new_avg = (prev_tokens * prev_avg + tokens_bought * fill_price) / new_tokens if new_tokens > 0 else fill_price
-
-            self.positions[market_id] = {"outcome": outcome, "size_tokens": new_tokens, "avg_price": new_avg}
+            out = {"outcome": outcome, "size_tokens": new_tokens, "avg_price": new_avg}
+            if pos.get("stop_loss_price") is not None:
+                out["stop_loss_price"] = pos["stop_loss_price"]
+                out["take_profit_price"] = pos["take_profit_price"]
+            elif sl > 0 and tp > 0:
+                out["stop_loss_price"] = sl
+                out["take_profit_price"] = tp
+            self.positions[market_id] = out
             self.balance -= size_usd
 
             executions.append(
@@ -79,6 +93,40 @@ class PaperTrader:
             logger.info(f"FILLED: {market_id[:10]}... {outcome} {tokens_bought:.2f} tokens @ {fill_price:.4f}")
 
         return {"executions": executions, "portfolio": self.get_portfolio_metrics()}
+
+    def close_positions(
+        self,
+        to_close: List[Dict[str, Any]],
+        fee_pct: float = 0.001,
+    ) -> Dict[str, Any]:
+        """Закрыть позиции (продажа по текущей цене). to_close = [{market_id, sell_price, reason?}, ...]."""
+        closed = []
+        for item in to_close:
+            market_id = item.get("market_id")
+            sell_price = float(item.get("sell_price", 0))
+            reason = item.get("reason", "exit")
+            if market_id not in self.positions or sell_price <= 0:
+                continue
+            pos = self.positions[market_id]
+            tokens = float(pos.get("size_tokens", 0))
+            avg_price = float(pos.get("avg_price", 0))
+            if tokens <= 0:
+                continue
+            proceeds = tokens * sell_price * (1 - fee_pct)
+            pnl = proceeds - tokens * avg_price
+            self.balance += proceeds
+            self.closed_trades.append({
+                "market_id": market_id,
+                "pnl_usd": round(pnl, 2),
+                "tokens": tokens,
+                "avg_price": avg_price,
+                "sell_price": sell_price,
+                "reason": reason,
+            })
+            del self.positions[market_id]
+            closed.append({"market_id": market_id, "pnl_usd": round(pnl, 2), "proceeds": round(proceeds, 2), "reason": reason})
+            logger.info("CLOSED %s (%s): %.2f tokens @ %.4f -> %.4f, PnL $%.2f", market_id[:10], reason, tokens, avg_price, sell_price, pnl)
+        return {"closed": closed, "portfolio": self.get_portfolio_metrics()}
 
     def simulate_market_move(self, market_id: str, new_price: float) -> None:
         """Имитирует изменение цены (для теста PnL)."""
@@ -99,7 +147,8 @@ class PaperTrader:
             if mark_to_market_prices and mid in mark_to_market_prices:
                 current_price = mark_to_market_prices[mid]
             else:
-                current_price = avg * random.uniform(0.95, 1.05)
+                # Без реальных цен — считаем по себестоимости, чтобы Total Value не прыгал от random между запусками
+                current_price = avg
             unrealized_pnl += tok * (current_price - avg)
 
         # total_value = cash + позиции по текущим ценам = balance + cost_basis + unrealized_pnl

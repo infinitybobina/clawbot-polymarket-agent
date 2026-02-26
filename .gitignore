@@ -29,3 +29,6 @@ build/
 
 # Локальные данные (если генерируются скриптом)
 candidates.json
+portfolio_state.json
+sl_cooldown.json
+tp_cooldown.json

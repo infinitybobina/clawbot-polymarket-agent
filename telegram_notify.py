@@ -18,9 +18,12 @@ except ImportError:
 
 
 def _get_env():
+    """Токен и chat_id из .env (при вызове из Планировщика .env ищется рядом с main.py)."""
     try:
         from dotenv import load_dotenv
-        load_dotenv()
+        import sys
+        _root = os.path.dirname(os.path.abspath(sys.argv[0] or "."))
+        load_dotenv(os.path.join(_root, ".env"))
     except ImportError:
         pass
     token = os.getenv("TELEGRAM_TOKEN", "").strip()
