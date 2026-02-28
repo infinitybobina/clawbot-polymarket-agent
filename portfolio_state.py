@@ -17,31 +17,39 @@ def _state_path(root: str) -> str:
     return os.path.join(root, STATE_FILENAME)
 
 
-def load_state(root: str) -> Tuple[Optional[float], Optional[Dict[str, Dict[str, Any]]]]:
-    """Загрузить balance и positions из portfolio_state.json. Возвращает (balance, positions) или (None, None)."""
+def load_state(root: str) -> Tuple[Optional[float], Optional[Dict[str, Dict[str, Any]]], float]:
+    """Загрузить balance, positions и cumulative_realized_pnl из portfolio_state.json.
+    Возвращает (balance, positions, cumulative_realized_pnl). При отсутствии файла — (None, None, 0)."""
     path = _state_path(root)
     if not os.path.isfile(path):
-        return None, None
+        return None, None, 0.0
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
         balance = float(data.get("balance", 0))
         positions = data.get("positions", {})
-        logger.info("Portfolio state loaded: balance=%.2f, positions=%d", balance, len(positions))
-        return balance, positions
+        cumulative_realized_pnl = float(data.get("cumulative_realized_pnl", 0))
+        logger.info("Portfolio state loaded: balance=%.2f, positions=%d, realized_pnl=%.2f", balance, len(positions), cumulative_realized_pnl)
+        return balance, positions, cumulative_realized_pnl
     except Exception as e:
         logger.warning("Failed to load portfolio state: %s", e)
-        return None, None
+        return None, None, 0.0
 
 
-def save_state(root: str, balance: float, positions: Dict[str, Dict[str, Any]]) -> None:
-    """Сохранить balance и positions в portfolio_state.json."""
+def save_state(
+    root: str,
+    balance: float,
+    positions: Dict[str, Dict[str, Any]],
+    cumulative_realized_pnl: float = 0.0,
+) -> None:
+    """Сохранить balance, positions и cumulative_realized_pnl в portfolio_state.json."""
     path = _state_path(root)
     try:
         # positions: только сериализуемые поля
         out = {
             "balance": round(balance, 2),
             "positions": {},
+            "cumulative_realized_pnl": round(cumulative_realized_pnl, 2),
         }
         for mid, p in positions.items():
             rec = {
@@ -56,6 +64,6 @@ def save_state(root: str, balance: float, positions: Dict[str, Dict[str, Any]]) 
             out["positions"][mid] = rec
         with open(path, "w", encoding="utf-8") as f:
             json.dump(out, f, indent=2, ensure_ascii=False)
-        logger.info("Portfolio state saved: balance=%.2f, positions=%d", balance, len(positions))
+        logger.info("Portfolio state saved: balance=%.2f, positions=%d, realized_pnl=%.2f", balance, len(positions), cumulative_realized_pnl)
     except Exception as e:
         logger.warning("Failed to save portfolio state: %s", e)

@@ -177,6 +177,9 @@ class LLMStrategy:
         sl_pct: float = 0.07,
         tp_pct: float = 0.18,
     ) -> List[Dict[str, Any]]:
+        if not candidates:
+            logger.info("LLM: 0 candidates, skip API and return []")
+            return []
         # Полный market_id нужен для ответа LLM (блоки 3–4 используют его)
         markets_text = "\n".join([
             f"- market_id={m.market_id} | YES={m.yes_price:.4f}, NO={m.no_price:.4f}, "
@@ -226,6 +229,8 @@ class LLMStrategy:
                 for s in raw:
                     if not (isinstance(s, dict) and {"market_id", "target_size_usd", "outcome", "side"}.issubset(s.keys())):
                         continue
+                    if s.get("market_id") not in by_id:
+                        continue  # только сигналы по рынкам из переданного списка кандидатов
                     if float(s.get("expected_ev", 0)) < min_ev_threshold:
                         continue
                     # Нормализуем ключи от LLM (могут прийти limitPrice, stop_loss и т.д.)
@@ -237,6 +242,7 @@ class LLMStrategy:
                         lp = getattr(by_id[s["market_id"]], "yes_price", 0.5) or 0.5
                     if lp <= 0:
                         lp = 0.5
+                    lp = max(lp, 0.02)  # никогда не выдавать limit_price 0 (мёртвый рынок)
                     s["limit_price"] = round(lp * 0.99, 4)
                     entry = float(s["limit_price"])
                     sl = max(0.01, entry * (1 - sl_pct))

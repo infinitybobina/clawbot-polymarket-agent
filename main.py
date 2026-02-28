@@ -71,18 +71,47 @@ async def main():
 
     # Blocks 1+2+3 с параметрами из config
     async with ClawBotDataFeed() as datafeed:
-        markets = await datafeed.fetch_politics_markets()
+        category = cfg.get("markets_category", "politics")
+        markets = []
+        if category == "crypto":
+            min_vol = cfg.get("crypto_min_volume", 10_000)
+            min_liq = cfg.get("crypto_min_liquidity", 1_000)
+            max_hours = cfg.get("crypto_resolution_hours_max", 1.0)
+            markets = await datafeed.fetch_crypto_markets(
+                min_volume_usd=min_vol,
+                min_liquidity_usd=min_liq,
+                max_hours_to_resolution=max_hours,
+            )
+        elif category == "both":
+            min_vol_p = cfg.get("min_volume", 500_000)
+            markets_p = await datafeed.fetch_politics_markets(min_volume_usd=min_vol_p)
+            min_vol_c = cfg.get("crypto_min_volume", 10_000)
+            min_liq = cfg.get("crypto_min_liquidity", 0)
+            max_hours = cfg.get("crypto_resolution_hours_max", 1.0)
+            markets_c = await datafeed.fetch_crypto_markets(
+                min_volume_usd=min_vol_c,
+                min_liquidity_usd=min_liq,
+                max_hours_to_resolution=max_hours,
+            )
+            markets = markets_p + markets_c
+            logger.info("Fetched %d politics + %d crypto, total %d markets", len(markets_p), len(markets_c), len(markets))
+        else:
+            min_vol = cfg.get("min_volume", 500_000)
+            markets = await datafeed.fetch_politics_markets(min_volume_usd=min_vol)
         top_candidates = datafeed.get_top_mispricing(cfg["n_markets"])
-        logger.info(f"Fetched {len(markets)} markets, top {len(top_candidates)} candidates")
+        if category != "both":
+            logger.info("Fetched %d %s markets, top %d candidates", len(markets), category, len(top_candidates))
+        else:
+            logger.info("Top %d candidates (politics + crypto)", len(top_candidates))
 
         # Состояние портфеля между запусками — чтобы не слать один и тот же сигнал каждый час
-        saved_balance, saved_positions = load_state(_root)
+        saved_balance, saved_positions, cumulative_realized_pnl = load_state(_root)
         initial_balance = cfg.get("initial_balance", 100_000)
         trader = PaperTrader(initial_balance=initial_balance)
         if saved_balance is not None and saved_positions is not None:
             trader.balance = saved_balance
             trader.positions = saved_positions
-            logger.info("Restored portfolio: balance=%.2f, positions=%d", trader.balance, len(trader.positions))
+            logger.info("Restored portfolio: balance=%.2f, positions=%d, realized_pnl=%.2f", trader.balance, len(trader.positions), cumulative_realized_pnl)
 
         # Cooldown после SL и TP: каждый запуск уменьшаем счётчик
         sl_cooldown = load_cooldown(_root)
@@ -119,7 +148,8 @@ async def main():
         if to_close:
             close_result = trader.close_positions(to_close)
             closed_by_exit = close_result.get("closed", [])
-            save_state(_root, trader.balance, trader.positions)
+            cumulative_realized_pnl += sum(float(c.get("pnl_usd", 0)) for c in closed_by_exit)
+            save_state(_root, trader.balance, trader.positions, cumulative_realized_pnl)
             sl_closed = [c["market_id"] for c in closed_by_exit if c.get("reason") == "SL"]
             tp_closed = [c["market_id"] for c in closed_by_exit if c.get("reason") == "TP"]
             if sl_closed:
@@ -142,6 +172,14 @@ async def main():
             top_candidates = [m for m in top_candidates if m.market_id not in exclude_ids]
             logger.info("Excluded %d held + %d SL + %d TP cooldown, candidates left: %d", len(open_market_ids), len(sl_cooldown_ids), len(tp_cooldown_ids), len(top_candidates))
 
+        # Не передавать в стратегию «отработанные» и мёртвые рынки
+        max_entry = cfg.get("max_entry_price", 0.90)
+        min_yes_price = 0.02  # рынки с YES <= 0.02 считаем мёртвыми (исполнение по 0.0001 даёт гарантированный убыток)
+        _before = len(top_candidates)
+        top_candidates = [m for m in top_candidates if m.yes_price < max_entry and m.yes_price >= min_yes_price]
+        if _before > len(top_candidates):
+            logger.info("Excluded %d markets (YES >= %.2f or YES < %.2f), candidates left: %d", _before - len(top_candidates), max_entry, min_yes_price, len(top_candidates))
+
         strategy = ClawBotStrategy(
             use_llm=True,
             base_balance_usd=cfg.get("initial_balance", 100_000),
@@ -153,6 +191,14 @@ async def main():
         )
         signals = strategy.generate_signals(top_candidates)
         logger.info(f"Generated {len(signals)} signals")
+        # Категория по каждому сигналу (для риска и Telegram)
+        for s in signals:
+            mid = s.get("market_id")
+            if mid and mid in datafeed.markets:
+                cat = (datafeed.markets[mid].category or "").strip().lower()
+                s["category"] = "crypto" if cat == "crypto" else "US-current-affairs"
+            else:
+                s["category"] = "US-current-affairs"
 
         risk_mgr = RiskManager()
         risk_mgr.config["max_single_market_pct"] = cfg["risk_per_trade"]
@@ -160,6 +206,7 @@ async def main():
         risk_mgr.config["max_exposure_pct"] = cfg["max_exposure_pct"]
         risk_mgr.config["min_reward_risk_ratio"] = cfg.get("min_reward_risk_ratio", 1.5)
         risk_mgr.config["high_entry_ratio_exempt"] = cfg.get("high_entry_ratio_exempt", 0.95)
+        risk_mgr.config["max_entry_price"] = cfg.get("max_entry_price", 0.90)
         risk_mgr.config["sl_pct"] = cfg.get("sl_pct", 0.07)
         risk_mgr.config["tp_pct"] = cfg.get("tp_pct", 0.18)
         risk_mgr.portfolio.balance_usd = trader.balance
@@ -167,7 +214,13 @@ async def main():
             mid: float(p.get("size_tokens", 0)) * float(p.get("avg_price", 0))
             for mid, p in trader.positions.items()
         }
-        risk_mgr.portfolio.exposure_by_category["US-current-affairs"] = sum(risk_mgr.portfolio.positions.values())
+        # Экспозиция по категориям (для режима "both" — лимит на каждую категорию отдельно)
+        for mid, size in risk_mgr.portfolio.positions.items():
+            cat = "US-current-affairs"
+            if mid in datafeed.markets:
+                c = (datafeed.markets[mid].category or "").strip().lower()
+                cat = "crypto" if c == "crypto" else "US-current-affairs"
+            risk_mgr.portfolio.exposure_by_category[cat] = risk_mgr.portfolio.exposure_by_category.get(cat, 0) + size
         if signals:
             s0 = signals[0]
             logger.info(
@@ -185,12 +238,42 @@ async def main():
                 logger.warning("Risk rejected signal %d: %s", i + 1, reason)
 
         logger.info(f"Blocks 1-3: {len(approved_orders)} approved orders")
+        # Лимит размера по объёму/глубине рынка: политика и крипто (на малых рынках не двигать цену)
+        pct_vol = cfg.get("max_trade_pct_of_volume", 0.05)
+        pct_depth = cfg.get("max_trade_pct_of_depth", 0.10)
+        for order in approved_orders:
+            mid = order.get("market_id")
+            if not mid or mid not in datafeed.markets:
+                continue
+            m = datafeed.markets[mid]
+            vol_cap = (m.volume_usd or 0) * pct_vol
+            depth_cap = (getattr(m, "liquidity_usd", 0) or 0) * pct_depth
+            max_size = vol_cap if vol_cap > 0 else 0
+            if depth_cap > 0:
+                max_size = min(max_size, depth_cap) if max_size > 0 else depth_cap
+            if max_size > 0:
+                current = float(order.get("final_size_usd") or order.get("target_size_usd") or 0)
+                if current > max_size:
+                    order["final_size_usd"] = round(max_size, 2)
+                    cat = (getattr(m, "category", None) or "").strip().lower()
+                    logger.info("Volume cap %s: %s size %.0f -> %.0f (vol=%.0f liq=%.0f)", cat or "market", mid[:12], current, order["final_size_usd"], m.volume_usd, getattr(m, "liquidity_usd", 0))
         for order in approved_orders:
             logger.info(f"Risk approved: BUY {order.get('market_id', '')[:12]}... ${order.get('final_size_usd', order.get('target_size_usd', 0)):,.0f}")
 
+        # Нормализация limit_price: если 0 или не задан — брать yes_price из datafeed, иначе не исполнять мусор
+        for order in approved_orders:
+            mid = order.get("market_id")
+            lp = float(order.get("limit_price") or 0)
+            if lp <= 0.02 and mid and mid in datafeed.markets:
+                order["limit_price"] = max(0.02, float(datafeed.markets[mid].yes_price))
+                logger.info("Order %s: limit_price подставлен из datafeed: %.4f", mid[:12], order["limit_price"])
+            elif lp <= 0.02:
+                order["limit_price"] = 0.50
+                logger.warning("Order %s: limit_price был %.4f, подставлен 0.50", mid[:12] if mid else "?", lp)
+
         # Block 4: Paper Trading SIMULATION
         execution_result = trader.execute_orders(approved_orders)
-        save_state(_root, trader.balance, trader.positions)
+        save_state(_root, trader.balance, trader.positions, cumulative_realized_pnl)
         
         logger.info("Portfolio after trades:")
         for metric, value in execution_result["portfolio"].items():
@@ -234,18 +317,24 @@ async def main():
                 await send_telegram_message(exit_msg)
             if approved_orders:
                 for i, order in enumerate(approved_orders, 1):
-                    mid = order.get("market_id", "")[:16]
+                    order_mid = order.get("market_id", "")
+                    mid = order_mid[:16]
                     side = order.get("outcome", "YES")
                     size_k = (order.get("final_size_usd") or order.get("target_size_usd") or 0) / 1000
                     price = order.get("limit_price", 0)
                     ev = order.get("expected_ev", 0)
+                    market_label = ""
+                    if order_mid and order_mid in datafeed.markets:
+                        q = getattr(datafeed.markets[order_mid], "question", "") or ""
+                        market_label = (q[:120] + "…") if len(q) > 120 else q
                     live_msg = (
                         "CLAWBOT LIVE\n"
                         f"BUY {mid}@{side} ${size_k:.0f}k @{price:.3f}\n"
-                        f"EV: {ev*100:.1f}% | Exposure: {open_exposure_pct:.0f}/{cfg['max_exposure_pct']*100:.0f}%"
+                        + (f"Market: {market_label}\n" if market_label else "")
+                        + f"Category: {category} | EV: {ev*100:.1f}% | Exposure: {open_exposure_pct:.0f}/{cfg['max_exposure_pct']*100:.0f}%"
                     )
                     await send_telegram_message(live_msg)
-            realized_pnl = sum(float(c.get("pnl_usd", 0)) for c in trader.closed_trades)
+            realized_pnl = cumulative_realized_pnl  # кумулятивный реализованный PnL (сохраняется между запусками)
             unrealized_pnl = final_metrics.get("unrealized_pnl", 0)
             summary = (
                 f"ClawBot Report\n"

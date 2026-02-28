@@ -40,8 +40,8 @@ class PaperTrader:
 
             if size_usd <= 0:
                 continue
-
-            safe_price = max(limit_price, 0.0001)
+            # Никогда не исполнять по цене <= 0.02 (мёртвые рынки / ошибочный 0 от LLM)
+            safe_price = max(limit_price, 0.02)
             if backtest_fill_prices and market_id in backtest_fill_prices:
                 fill_price = backtest_fill_prices[market_id] * (1 + slippage_pct)
                 fill_price *= (1 + fee_pct)

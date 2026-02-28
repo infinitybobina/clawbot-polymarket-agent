@@ -20,6 +20,7 @@ class RejectReason(Enum):
     DAILY_LOSS_LIMIT = "DAILY_LOSS_LIMIT_REACHED"
     INVALID_SL_TP = "INVALID_SL_TP_LEVELS"
     RISK_PER_TRADE_EXCEEDED = "RISK_PER_TRADE_EXCEEDED"
+    ENTRY_TOO_HIGH = "ENTRY_TOO_HIGH"
     OK = "OK"
 
 @dataclass
@@ -73,11 +74,16 @@ class RiskManager:
         """Проверки по порядку приоритета"""
         target_size = float(signal["target_size_usd"])
         market_id = signal["market_id"]
-        category = "US-current-affairs"
+        category = signal.get("category") or self.config.get("category", "US-current-affairs")
         entry = float(signal.get("limit_price") or 0)
         stop_loss_price = float(signal.get("stop_loss_price") or 0)
         take_profit_price = float(signal.get("take_profit_price") or 1)
         logger.info("Risk eval: entry=%.4f sl=%.4f tp=%.4f", entry, stop_loss_price, take_profit_price)
+
+        max_entry = self.config.get("max_entry_price", 0.90)
+        if entry > max_entry:
+            logger.warning("Risk: ENTRY_TOO_HIGH entry=%.2f > %.2f (мало апсайда, большой даунсайд)", entry, max_entry)
+            return {"status": "rejected", "reason": RejectReason.ENTRY_TOO_HIGH.value}
 
         # 0. SL/TP: при невалидных уровнях или плохом ratio — пересчитываем по конфигу
         eps = 1e-6
