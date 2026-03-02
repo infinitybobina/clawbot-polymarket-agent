@@ -141,7 +141,7 @@ class Backtester:
         self.equity_curve: List[float] = [self.initial_balance]
         self.market_ids: List[str] = []
         self.prices_by_market: Dict[str, List[float]] = {}
-        self.trader = PaperTrader(initial_balance=self.initial_balance)
+        self.trader = PaperTrader({"initial_balance": self.initial_balance})
         self.risk_mgr = RiskManager()
         self.risk_mgr.config["max_single_market_pct"] = self.max_single_market_pct
         self.risk_mgr.config["max_category_pct"] = 0.75

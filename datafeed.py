@@ -12,6 +12,7 @@ from typing import Dict, List, Optional
 from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
+logging.getLogger(__name__).setLevel(logging.INFO)
 
 
 @dataclass
@@ -23,10 +24,14 @@ class MarketSnapshot:
     volume_usd: float
     category: str
     question: str = ""
+    # Бинарный (2 исхода) vs мультиисходный (3+). Сейчас работаем только с бинарными; мульти — ветка позже.
+    outcomes_count: int = 2
     # Для crypto/мелких рынков: лимит размера заявки от объёма и глубины
     end_date_iso: Optional[str] = None
     seconds_to_resolution: Optional[float] = None
     liquidity_usd: float = 0.0
+    # v2.0 WebSocket: [yes_token_id, no_token_id] из Gamma clobTokenIds
+    clob_token_ids: Optional[List[str]] = None
 
 
 class ClawBotDataFeed:
@@ -44,9 +49,15 @@ class ClawBotDataFeed:
             await self.session.close()
         return None
 
-    async def fetch_politics_markets(self, min_volume_usd: float = 500_000) -> List[MarketSnapshot]:
-        """Gamma REST: топ рынки Politics с volume > min_volume_usd (по умолчанию 500k — больше кандидатов)."""
-        url = f"{self.gamma_base}/markets?active=true&category=politics&limit=50&offset=0"
+    async def fetch_category_markets(
+        self,
+        category: str,
+        min_volume_usd: float = 100_000,
+        limit: int = 50,
+    ) -> List[MarketSnapshot]:
+        """Gamma REST: рынки по категории (politics, sports, culture, economy). Только объёмный фильтр."""
+        cat_lower = (category or "politics").strip().lower()
+        url = f"{self.gamma_base}/markets?active=true&category={cat_lower}&limit={limit}&offset=0"
         async with self.session.get(url) as resp:
             data = await resp.json()
         raw_list = data if isinstance(data, list) else data.get("markets", [])
@@ -63,20 +74,32 @@ class ClawBotDataFeed:
                         prices = ["0", "0"]
                 else:
                     prices = prices_raw
+                outcomes_count = len(prices) if isinstance(prices, (list, tuple)) else 2
                 yes_p = float(prices[0]) if len(prices) > 0 else 0.0
                 no_p = float(prices[1]) if len(prices) > 1 else 0.0
-                markets.append(MarketSnapshot(
+                cids = m.get("clobTokenIds")
+                clob_ids = list(cids) if isinstance(cids, (list, tuple)) and len(cids) >= 2 else None
+                snap = MarketSnapshot(
                     market_id=str(m.get("conditionId") or m.get("id") or ""),
                     yes_price=yes_p,
                     no_price=no_p,
                     spread=abs(yes_p - no_p),
                     volume_usd=vol_f,
-                    category=str(m.get("category") or ""),
-                    question=str(m.get("question") or "")
-                ))
+                    category=str(m.get("category") or cat_lower),
+                    question=str(m.get("question") or ""),
+                    outcomes_count=outcomes_count,
+                    clob_token_ids=clob_ids,
+                )
+                markets.append(snap)
         self.markets.update({m.market_id: m for m in markets})
-        logger.info(f"Fetched {len(markets)} politics markets")
+        binary_count = sum(1 for m in markets if m.outcomes_count == 2)
+        logger.info("Fetched %d %s markets (%d binary; vol >= %.0f)",
+                    len(markets), cat_lower, binary_count, min_volume_usd)
         return markets
+
+    async def fetch_politics_markets(self, min_volume_usd: float = 500_000) -> List[MarketSnapshot]:
+        """Gamma REST: топ рынки Politics. Обёртка над fetch_category_markets."""
+        return await self.fetch_category_markets("politics", min_volume_usd=min_volume_usd)
 
     async def fetch_crypto_markets(
         self,
@@ -131,8 +154,11 @@ class ClawBotDataFeed:
                     prices = ["0", "0"]
             else:
                 prices = prices_raw
+            outcomes_count = len(prices) if isinstance(prices, (list, tuple)) else 2
             yes_p = float(prices[0]) if len(prices) > 0 else 0.0
             no_p = float(prices[1]) if len(prices) > 1 else 0.0
+            cids = m.get("clobTokenIds")
+            clob_ids = list(cids) if isinstance(cids, (list, tuple)) and len(cids) >= 2 else None
             snap = MarketSnapshot(
                 market_id=str(m.get("conditionId") or m.get("id") or ""),
                 yes_price=yes_p,
@@ -141,23 +167,109 @@ class ClawBotDataFeed:
                 volume_usd=vol_f,
                 category=str(m.get("category") or "crypto"),
                 question=str(m.get("question") or ""),
+                outcomes_count=outcomes_count,
                 end_date_iso=end_d if isinstance(end_d, str) else None,
                 seconds_to_resolution=sec_to if sec_to is not None else None,
                 liquidity_usd=liq_f,
+                clob_token_ids=clob_ids,
             )
             markets.append(snap)
         self.markets.update({m.market_id: m for m in markets})
-        logger.info("Fetched %d crypto markets (resolution <= %.1fh, vol >= %.0f, liq >= %.0f)",
-                    len(markets), max_hours_to_resolution, min_volume_usd, min_liquidity_usd)
+        binary_count = sum(1 for m in markets if m.outcomes_count == 2)
+        logger.info("Fetched %d crypto markets (%d binary; resolution <= %.1fh, vol >= %.0f, liq >= %.0f)",
+                    len(markets), binary_count, max_hours_to_resolution, min_volume_usd, min_liquidity_usd)
         return markets
 
+    def _binary_markets(self):
+        """Только бинарные рынки (2 исхода). Мультиисходные — отдельная ветка анализа позже."""
+        all_binary = []
+        for m in self.markets.values():
+            oc = getattr(m, "outcomes_count", None)
+            if oc is None:
+                cids = getattr(m, "clob_token_ids", None)
+                oc = len(cids) if cids and isinstance(cids, (list, tuple)) else 2
+            if oc == 2:
+                all_binary.append(m)
+        logger.info("DEBUG _binary_markets: %d from %d total", len(all_binary), len(self.markets))
+        return all_binary
+
     def get_top_mispricing(self, top_n: int = 5) -> List[MarketSnapshot]:
-        """Топ N рынков по спреду для стратегии"""
-        return sorted(
-            self.markets.values(),
-            key=lambda m: m.spread,
-            reverse=True
+        """Топ N бинарных рынков по спреду для стратегии (без фильтра по цене)."""
+        return sorted(self._binary_markets(), key=lambda m: m.spread, reverse=True)[:top_n]
+
+    def get_tradeable_top(
+        self,
+        top_n: int,
+        max_entry: float = 0.99,
+        min_yes: float = 0.02,
+        exclude_ids: Optional[set] = None,
+    ) -> List[MarketSnapshot]:
+        """Сначала отбор по пригодности (YES в диапазоне), потом топ по спреду. Только бинарные рынки."""
+        exclude_ids = exclude_ids or set()
+        binary_markets = self._binary_markets()
+
+        logger.info("=== YES PRICES DEBUG ===")
+        for m in binary_markets[:10]:
+            logger.info("YES=%.4f vol=$%.0fk id=%s", m.yes_price, m.volume_usd / 1e3, (m.market_id[:8] if m.market_id else ""))
+
+        logger.info("DEBUG FILTER START: %d binary markets", len(binary_markets))
+
+        rejected = 0
+        tradeable = []
+
+        for m in binary_markets:
+            vol_k = int(m.volume_usd // 1000) if m.volume_usd else 0
+            mid_short = m.market_id[:12] if m.market_id else ""
+
+            if m.market_id in exclude_ids:
+                logger.info("DEBUG filter_rejected: YES=%.4f vol=$%dk id=%s reason=excluded", m.yes_price, vol_k, mid_short)
+                rejected += 1
+                continue
+
+            if m.yes_price < min_yes:
+                logger.info("DEBUG filter_rejected: YES=%.4f vol=$%dk id=%s reason=YES<min_yes(%.3f)", m.yes_price, vol_k, mid_short, min_yes)
+                rejected += 1
+                continue
+
+            if m.yes_price >= max_entry:
+                logger.info("DEBUG filter_rejected: YES=%.4f vol=$%dk id=%s reason=YES>=max_entry(%.3f)", m.yes_price, vol_k, mid_short, max_entry)
+                rejected += 1
+                continue
+
+            tradeable.append(m.market_id)
+
+        logger.info("DEBUG FILTER END: rejected=%d tradeable=%d", rejected, len(tradeable))
+
+        top_tradeable = sorted(
+            tradeable,
+            key=lambda mid: getattr(self.markets.get(mid), "spread", 0),
+            reverse=True,
         )[:top_n]
+        logger.info("FINAL candidates: %d (top %d of %d)", len(top_tradeable), top_n, len(tradeable))
+        return [self.markets[mid] for mid in top_tradeable if mid in self.markets]
+
+    def tradeable_diagnostic(
+        self,
+        max_entry: float = 0.99,
+        min_yes: float = 0.02,
+        exclude_ids: Optional[set] = None,
+    ) -> dict:
+        """Диагностика: сколько бинарных отсекается по YES и по exclude. Главный резак — yes_price >= max_entry."""
+        exclude_ids = exclude_ids or set()
+        binary = self._binary_markets()
+        yes_above = sum(1 for m in binary if m.yes_price >= max_entry)
+        yes_below = sum(1 for m in binary if m.yes_price < min_yes)
+        in_range = sum(1 for m in binary if min_yes <= m.yes_price < max_entry)
+        excluded_by_id = sum(1 for m in binary if min_yes <= m.yes_price < max_entry and m.market_id in exclude_ids)
+        return {
+            "binary_total": len(binary),
+            "yes_above_max_entry": yes_above,
+            "yes_below_min": yes_below,
+            "in_yes_range": in_range,
+            "excluded_held_cooldown": excluded_by_id,
+        }
+
+    # TODO: ветка мультиисходных рынков (outcomes_count >= 3): отдельный отбор и логика анализа/торговли
 
 
 async def test_datafeed():

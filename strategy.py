@@ -63,16 +63,38 @@ class ClawBotStrategy:
         self.tp_pct = tp_pct
 
     def generate_signals(self, markets: List[MarketSnapshot]) -> List[Dict[str, Any]]:
-        """Простая стратегия или LLM (если use_llm=True)."""
+        """Простая стратегия или LLM (если use_llm=True). При 0 сигналов от LLM — fallback на простую стратегию."""
         if self.use_llm:
             try:
                 llm = LLMStrategy()
-                return llm.generate_signals(
+                signals = llm.generate_signals(
                     markets,
                     min_ev_threshold=self.min_ev_threshold,
                     sl_pct=self.sl_pct,
                     tp_pct=self.tp_pct,
                 )
+                if not signals and markets:
+                    logger.info("LLM returned 0 signals, fallback to simple strategy for %d candidates", len(markets))
+                    signals = self._generate_signals_simple(markets)
+                    # Если простая тоже 0 (напр. все кандидаты с высоким YES) — один тестовый сигнал по первому рынку
+                    if not signals and markets:
+                        m = markets[0]
+                        entry = max(0.02, min(0.99, m.yes_price * 0.99))
+                        sl = max(0.01, entry * (1 - self.sl_pct))
+                        tp = min(0.99, entry * (1 + self.tp_pct))
+                        size = self.base_balance * 0.02
+                        signals = [{
+                            "market_id": m.market_id,
+                            "side": "buy",
+                            "outcome": "YES",
+                            "limit_price": round(entry, 4),
+                            "target_size_usd": max(50, size),
+                            "expected_ev": 0.03,
+                            "stop_loss_price": round(sl, 4),
+                            "take_profit_price": round(tp, 4),
+                        }]
+                        logger.info("Fallback: 1 test signal for %s (entry=%.4f)", m.market_id[:12], entry)
+                return signals
             except Exception as e:
                 logger.warning(f"LLM failed ({e}), falling back to simple strategy")
                 return self._generate_signals_simple(markets)

@@ -64,10 +64,12 @@ async def main():
     if hasattr(sys.stderr, "reconfigure"):
         sys.stderr.reconfigure(encoding="utf-8")
 
+    cfg = PROD_CONFIG
+    level_name = cfg.get("log_level", "INFO").upper()
+    logging.getLogger().setLevel(getattr(logging, level_name, logging.INFO))
     logger.info("ClawBot v1.1: FULL SIMULATION (Paper Trading)")
     logger.info("CWD: %s | .env from: %s", os.getcwd(), os.path.join(_root, ".env"))
     logger.info("TELEGRAM_TOKEN set: %s | TELEGRAM_CHAT_ID set: %s", bool(os.getenv("TELEGRAM_TOKEN")), bool(os.getenv("TELEGRAM_CHAT_ID")))
-    cfg = PROD_CONFIG
 
     # Blocks 1+2+3 с параметрами из config
     async with ClawBotDataFeed() as datafeed:
@@ -98,16 +100,14 @@ async def main():
         else:
             min_vol = cfg.get("min_volume", 500_000)
             markets = await datafeed.fetch_politics_markets(min_volume_usd=min_vol)
-        top_candidates = datafeed.get_top_mispricing(cfg["n_markets"])
         if category != "both":
-            logger.info("Fetched %d %s markets, top %d candidates", len(markets), category, len(top_candidates))
+            logger.info("Fetched %d %s markets", len(markets), category)
         else:
-            logger.info("Top %d candidates (politics + crypto)", len(top_candidates))
+            logger.info("Fetched %d politics + %d crypto, total %d markets", len(markets_p), len(markets_c), len(markets))
 
         # Состояние портфеля между запусками — чтобы не слать один и тот же сигнал каждый час
         saved_balance, saved_positions, cumulative_realized_pnl = load_state(_root)
-        initial_balance = cfg.get("initial_balance", 100_000)
-        trader = PaperTrader(initial_balance=initial_balance)
+        trader = PaperTrader(cfg)
         if saved_balance is not None and saved_positions is not None:
             trader.balance = saved_balance
             trader.positions = saved_positions
@@ -163,22 +163,21 @@ async def main():
             for c in closed_by_exit:
                 logger.info("%s: closed %s, PnL $%.2f", c.get("reason", "exit"), c["market_id"][:12], c.get("pnl_usd", 0))
 
-        # Не предлагать рынки, по которым уже есть позиция или действует cooldown (SL/TP)
+        # Кандидаты: сначала пригодность (YES в диапазоне), потом топ по спреду; исключаем held и cooldown
         open_market_ids = set(trader.positions.keys())
         sl_cooldown_ids = get_cooldown_set(sl_cooldown)
         tp_cooldown_ids = get_cooldown_set(tp_cooldown)
         exclude_ids = open_market_ids | sl_cooldown_ids | tp_cooldown_ids
-        if exclude_ids:
-            top_candidates = [m for m in top_candidates if m.market_id not in exclude_ids]
-            logger.info("Excluded %d held + %d SL + %d TP cooldown, candidates left: %d", len(open_market_ids), len(sl_cooldown_ids), len(tp_cooldown_ids), len(top_candidates))
-
-        # Не передавать в стратегию «отработанные» и мёртвые рынки
         max_entry = cfg.get("max_entry_price", 0.90)
-        min_yes_price = 0.02  # рынки с YES <= 0.02 считаем мёртвыми (исполнение по 0.0001 даёт гарантированный убыток)
-        _before = len(top_candidates)
-        top_candidates = [m for m in top_candidates if m.yes_price < max_entry and m.yes_price >= min_yes_price]
-        if _before > len(top_candidates):
-            logger.info("Excluded %d markets (YES >= %.2f or YES < %.2f), candidates left: %d", _before - len(top_candidates), max_entry, min_yes_price, len(top_candidates))
+        min_yes_price = cfg.get("min_entry_price", 0.02)
+        top_candidates = datafeed.get_tradeable_top(
+            cfg["n_markets"],
+            max_entry=max_entry,
+            min_yes=min_yes_price,
+            exclude_ids=exclude_ids,
+        )
+        tradeable_total = len([m for m in datafeed.markets.values() if min_yes_price <= m.yes_price < max_entry])
+        logger.info("Tradeable pool %d (YES %.2f–%.2f), excluded %d held+cooldown, top %d candidates", tradeable_total, min_yes_price, max_entry, len(exclude_ids), len(top_candidates))
 
         strategy = ClawBotStrategy(
             use_llm=True,

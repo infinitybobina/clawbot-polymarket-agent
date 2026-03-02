@@ -15,9 +15,10 @@ logger = logging.getLogger(__name__)
 
 
 class PaperTrader:
-    def __init__(self, initial_balance: float = 100000):
-        self.initial_balance = float(initial_balance)
-        self.balance = float(initial_balance)
+    def __init__(self, cfg: dict):
+        initial = float(cfg.get("initial_balance", 100_000))
+        self.initial_balance = initial
+        self.balance = initial
         # market_id → {outcome, size_tokens, avg_price}
         self.positions: Dict[str, Dict[str, Any]] = {}
         self.closed_trades: List[Dict[str, Any]] = []  # история PnL (на будущее)
@@ -56,6 +57,7 @@ class PaperTrader:
             tp = float(order.get("take_profit_price") or 1)
 
             # Записываем / усредняем позицию; SL/TP задаём при открытии, при допокупке не меняем
+            yes_token_id = order.get("yes_token_id")
             if market_id not in self.positions:
                 self.positions[market_id] = {
                     "outcome": outcome,
@@ -64,13 +66,19 @@ class PaperTrader:
                     "stop_loss_price": sl if sl > 0 else None,
                     "take_profit_price": tp if tp > 0 else None,
                 }
+                if yes_token_id:
+                    self.positions[market_id]["yes_token_id"] = yes_token_id
 
             pos = self.positions[market_id]
+            if yes_token_id and pos.get("yes_token_id") != yes_token_id:
+                pos["yes_token_id"] = yes_token_id
             prev_tokens = float(pos.get("size_tokens", 0.0))
             prev_avg = float(pos.get("avg_price", 0.0))
             new_tokens = prev_tokens + tokens_bought
             new_avg = (prev_tokens * prev_avg + tokens_bought * fill_price) / new_tokens if new_tokens > 0 else fill_price
             out = {"outcome": outcome, "size_tokens": new_tokens, "avg_price": new_avg}
+            if pos.get("yes_token_id"):
+                out["yes_token_id"] = pos["yes_token_id"]
             if pos.get("stop_loss_price") is not None:
                 out["stop_loss_price"] = pos["stop_loss_price"]
                 out["take_profit_price"] = pos["take_profit_price"]

@@ -1,0 +1,1505 @@
+2026-02-26 04:53:56,236 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 04:53:56,237 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 04:53:56,237 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 04:53:56,237 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 04:53:57,579 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 04:53:57,580 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 07:01:03,124 [INFO] openai._base_client: Retrying request to /chat/completions in 0.394227 seconds
+2026-02-26 09:14:55,687 [INFO] openai._base_client: Retrying request to /chat/completions in 0.885527 seconds
+2026-02-26 10:41:27,005 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 10:41:27,006 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 10:41:27,006 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 10:41:27,007 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 10:41:28,436 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 10:41:28,436 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 10:41:28,439 [INFO] portfolio_state: Portfolio state loaded: balance=98000.00, positions=1
+2026-02-26 10:41:28,439 [INFO] __main__: Restored portfolio: balance=98000.00, positions=1
+2026-02-26 10:41:28,439 [INFO] __main__: Excluded 1 held markets, candidates left: 6
+2026-02-26 10:41:33,196 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 10:41:33,216 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 10:41:33,219 [INFO] strategy: LLM generated 1 signals
+2026-02-26 10:41:33,220 [INFO] __main__: Generated 1 signals
+2026-02-26 10:41:33,220 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 10:41:33,220 [INFO] __main__: Risk approved: BUY 0xf2e631ea67... $2,000
+2026-02-26 10:41:33,221 [INFO] paper_trader: FILLED: 0xf2e631ea... YES 20098536.89 tokens @ 0.0001
+2026-02-26 10:41:33,222 [INFO] portfolio_state: Portfolio state saved: balance=96000.00, positions=2
+2026-02-26 10:41:33,223 [INFO] __main__: Portfolio after trades:
+2026-02-26 10:41:34,230 [INFO] __main__: Simulating market moves...
+2026-02-26 10:41:34,231 [INFO] paper_trader: 0x4afe273c... PnL: $8831133.94 (price 0.4500)
+2026-02-26 10:41:34,231 [INFO] paper_trader: 0xf2e631ea... PnL: $9042341.60 (price 0.4500)
+2026-02-26 10:41:36,747 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 10:41:36,750 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 10:41:39,197 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 10:41:39,199 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 10:51:26,977 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 10:51:26,978 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 10:51:26,978 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 10:51:26,978 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 10:51:28,313 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 10:51:28,314 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 10:51:28,336 [INFO] portfolio_state: Portfolio state loaded: balance=96000.00, positions=2
+2026-02-26 10:51:28,337 [INFO] __main__: Restored portfolio: balance=96000.00, positions=2
+2026-02-26 10:51:28,337 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 10:51:33,559 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 10:51:33,580 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 10:51:33,581 [INFO] strategy: LLM generated 1 signals
+2026-02-26 10:51:33,581 [INFO] __main__: Generated 1 signals
+2026-02-26 10:51:33,582 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 10:51:33,582 [INFO] __main__: Risk approved: BUY 0xa670159e0a... $2,000
+2026-02-26 10:51:33,582 [INFO] paper_trader: FILLED: 0xa670159e... YES 2027.77 tokens @ 0.9863
+2026-02-26 10:51:33,584 [INFO] portfolio_state: Portfolio state saved: balance=94000.00, positions=3
+2026-02-26 10:51:33,584 [INFO] __main__: Portfolio after trades:
+2026-02-26 10:51:34,588 [INFO] __main__: Simulating market moves...
+2026-02-26 10:51:34,590 [INFO] paper_trader: 0x4afe273c... PnL: $8831133.94 (price 0.4500)
+2026-02-26 10:51:34,591 [INFO] paper_trader: 0xf2e631ea... PnL: $9042331.75 (price 0.4500)
+2026-02-26 10:51:34,591 [INFO] paper_trader: 0xa670159e... PnL: $-1087.50 (price 0.4500)
+2026-02-26 10:51:37,342 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 10:51:37,344 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 10:51:39,744 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 10:51:39,745 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:01:26,932 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 11:01:26,933 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 11:01:26,933 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 11:01:26,934 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 11:01:28,342 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 11:01:28,342 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 11:01:28,360 [INFO] portfolio_state: Portfolio state loaded: balance=94000.00, positions=3
+2026-02-26 11:01:28,360 [INFO] __main__: Restored portfolio: balance=94000.00, positions=3
+2026-02-26 11:01:28,360 [INFO] __main__: Excluded 3 held markets, candidates left: 4
+2026-02-26 11:01:33,704 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 11:01:33,724 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 11:01:33,725 [INFO] strategy: LLM generated 1 signals
+2026-02-26 11:01:33,726 [INFO] __main__: Generated 1 signals
+2026-02-26 11:01:33,726 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 11:01:33,726 [INFO] __main__: Risk approved: BUY 0x1411e65d30... $2,000
+2026-02-26 11:01:33,727 [INFO] paper_trader: FILLED: 0x1411e65d... YES 2039.51 tokens @ 0.9806
+2026-02-26 11:01:33,729 [INFO] portfolio_state: Portfolio state saved: balance=92000.00, positions=4
+2026-02-26 11:01:33,730 [INFO] __main__: Portfolio after trades:
+2026-02-26 11:01:34,742 [INFO] __main__: Simulating market moves...
+2026-02-26 11:01:34,744 [INFO] paper_trader: 0x4afe273c... PnL: $8831133.94 (price 0.4500)
+2026-02-26 11:01:34,744 [INFO] paper_trader: 0xf2e631ea... PnL: $9042331.75 (price 0.4500)
+2026-02-26 11:01:34,744 [INFO] paper_trader: 0xa670159e... PnL: $-1087.50 (price 0.4500)
+2026-02-26 11:01:34,744 [INFO] paper_trader: 0x1411e65d... PnL: $-1082.22 (price 0.4500)
+2026-02-26 11:01:37,181 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:01:37,183 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:01:39,572 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:01:39,573 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:21:25,020 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 11:21:25,021 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 11:21:25,021 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 11:21:25,021 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 11:21:26,460 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 11:21:26,461 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 11:21:26,474 [INFO] portfolio_state: Portfolio state loaded: balance=92000.00, positions=4
+2026-02-26 11:21:26,475 [INFO] __main__: Restored portfolio: balance=92000.00, positions=4
+2026-02-26 11:21:26,475 [INFO] __main__: Excluded 4 held markets, candidates left: 3
+2026-02-26 11:21:33,761 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 11:21:33,775 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 11:21:33,778 [INFO] strategy: LLM generated 1 signals
+2026-02-26 11:21:33,778 [INFO] __main__: Generated 1 signals
+2026-02-26 11:21:33,779 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 11:21:33,779 [INFO] __main__: Risk approved: BUY 0x26db7bd607... $2,000
+2026-02-26 11:21:33,779 [INFO] paper_trader: FILLED: 0x26db7bd6... YES 20033108.35 tokens @ 0.0001
+2026-02-26 11:21:33,781 [INFO] portfolio_state: Portfolio state saved: balance=90000.00, positions=5
+2026-02-26 11:21:33,787 [INFO] __main__: Portfolio after trades:
+2026-02-26 11:21:34,795 [INFO] __main__: Simulating market moves...
+2026-02-26 11:21:34,797 [INFO] paper_trader: 0x4afe273c... PnL: $8831133.94 (price 0.4500)
+2026-02-26 11:21:34,797 [INFO] paper_trader: 0xf2e631ea... PnL: $9042331.75 (price 0.4500)
+2026-02-26 11:21:34,797 [INFO] paper_trader: 0xa670159e... PnL: $-1087.50 (price 0.4500)
+2026-02-26 11:21:34,797 [INFO] paper_trader: 0x1411e65d... PnL: $-1082.22 (price 0.4500)
+2026-02-26 11:21:34,798 [INFO] paper_trader: 0x26db7bd6... PnL: $9012898.76 (price 0.4500)
+2026-02-26 11:21:38,452 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:21:38,453 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:21:40,910 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:21:40,913 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:31:27,375 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 11:31:27,376 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 11:31:27,376 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 11:31:27,377 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 11:31:28,750 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 11:31:28,751 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 11:31:28,776 [INFO] portfolio_state: Portfolio state loaded: balance=90000.00, positions=5
+2026-02-26 11:31:28,776 [INFO] __main__: Restored portfolio: balance=90000.00, positions=5
+2026-02-26 11:31:28,776 [INFO] __main__: Excluded 5 held markets, candidates left: 2
+2026-02-26 11:31:34,333 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 11:31:34,350 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 11:31:34,354 [INFO] strategy: LLM generated 1 signals
+2026-02-26 11:31:34,354 [INFO] __main__: Generated 1 signals
+2026-02-26 11:31:34,355 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 11:31:34,355 [INFO] __main__: Risk approved: BUY 0x080a58fb24... $2,000
+2026-02-26 11:31:34,355 [INFO] paper_trader: FILLED: 0x080a58fb... YES 4030.72 tokens @ 0.4962
+2026-02-26 11:31:34,358 [INFO] portfolio_state: Portfolio state saved: balance=88000.00, positions=6
+2026-02-26 11:31:34,358 [INFO] __main__: Portfolio after trades:
+2026-02-26 11:31:35,363 [INFO] __main__: Simulating market moves...
+2026-02-26 11:31:35,364 [INFO] paper_trader: 0x4afe273c... PnL: $8831133.94 (price 0.4500)
+2026-02-26 11:31:35,364 [INFO] paper_trader: 0xf2e631ea... PnL: $9042331.75 (price 0.4500)
+2026-02-26 11:31:35,364 [INFO] paper_trader: 0xa670159e... PnL: $-1087.50 (price 0.4500)
+2026-02-26 11:31:35,364 [INFO] paper_trader: 0x1411e65d... PnL: $-1082.22 (price 0.4500)
+2026-02-26 11:31:35,364 [INFO] paper_trader: 0x26db7bd6... PnL: $9012895.45 (price 0.4500)
+2026-02-26 11:31:35,364 [INFO] paper_trader: 0x080a58fb... PnL: $-186.17 (price 0.4500)
+2026-02-26 11:31:37,962 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:31:37,965 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:31:40,461 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:31:40,464 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:41:27,610 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 11:41:27,611 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 11:41:27,611 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 11:41:27,612 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 11:41:28,919 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 11:41:28,920 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 11:41:28,948 [INFO] portfolio_state: Portfolio state loaded: balance=88000.00, positions=6
+2026-02-26 11:41:28,949 [INFO] __main__: Restored portfolio: balance=88000.00, positions=6
+2026-02-26 11:41:28,949 [INFO] __main__: Excluded 6 held markets, candidates left: 1
+2026-02-26 11:41:34,365 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 11:41:34,386 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 11:41:34,390 [INFO] strategy: LLM generated 1 signals
+2026-02-26 11:41:34,391 [INFO] __main__: Generated 1 signals
+2026-02-26 11:41:34,391 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 11:41:34,392 [INFO] __main__: Risk approved: BUY 0x10ee8590fc... $2,000
+2026-02-26 11:41:34,392 [INFO] paper_trader: FILLED: 0x10ee8590... YES 4078.60 tokens @ 0.4904
+2026-02-26 11:41:34,394 [INFO] portfolio_state: Portfolio state saved: balance=86000.00, positions=7
+2026-02-26 11:41:34,396 [INFO] __main__: Portfolio after trades:
+2026-02-26 11:41:35,413 [INFO] __main__: Simulating market moves...
+2026-02-26 11:41:35,415 [INFO] paper_trader: 0x4afe273c... PnL: $8831133.94 (price 0.4500)
+2026-02-26 11:41:35,416 [INFO] paper_trader: 0xf2e631ea... PnL: $9042331.75 (price 0.4500)
+2026-02-26 11:41:35,417 [INFO] paper_trader: 0xa670159e... PnL: $-1087.50 (price 0.4500)
+2026-02-26 11:41:35,417 [INFO] paper_trader: 0x1411e65d... PnL: $-1082.22 (price 0.4500)
+2026-02-26 11:41:35,418 [INFO] paper_trader: 0x26db7bd6... PnL: $9012895.45 (price 0.4500)
+2026-02-26 11:41:35,418 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 11:41:35,419 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 11:41:37,977 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:41:37,979 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:41:40,416 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:41:40,421 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:51:27,313 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 11:51:27,314 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 11:51:27,314 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 11:51:27,315 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 11:51:28,687 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 11:51:28,687 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 11:51:28,708 [INFO] portfolio_state: Portfolio state loaded: balance=86000.00, positions=7
+2026-02-26 11:51:28,709 [INFO] __main__: Restored portfolio: balance=86000.00, positions=7
+2026-02-26 11:51:28,709 [INFO] paper_trader: CLOSED 0x4afe273c: 19629191.38 tokens @ 0.0001 -> 0.0000, PnL $-2001.77
+2026-02-26 11:51:28,709 [INFO] paper_trader: CLOSED 0xf2e631ea: 20098536.89 tokens @ 0.0001 -> 0.0000, PnL $-2008.98
+2026-02-26 11:51:28,709 [INFO] paper_trader: CLOSED 0x26db7bd6: 20033108.35 tokens @ 0.0001 -> 0.0000, PnL $-1751.83
+2026-02-26 11:51:28,710 [INFO] portfolio_state: Portfolio state saved: balance=86252.76, positions=4
+2026-02-26 11:51:28,710 [INFO] __main__: Stop-loss: closed 0x4afe273cde, PnL $-2001.77
+2026-02-26 11:51:28,710 [INFO] __main__: Stop-loss: closed 0xf2e631ea67, PnL $-2008.98
+2026-02-26 11:51:28,711 [INFO] __main__: Stop-loss: closed 0x26db7bd607, PnL $-1751.83
+2026-02-26 11:51:28,711 [INFO] __main__: Excluded 4 held markets, candidates left: 3
+2026-02-26 11:51:34,576 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 11:51:34,594 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 11:51:34,595 [INFO] strategy: LLM generated 1 signals
+2026-02-26 11:51:34,596 [INFO] __main__: Generated 1 signals
+2026-02-26 11:51:34,596 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 11:51:34,596 [INFO] __main__: Risk approved: BUY 0x4afe273cde... $2,000
+2026-02-26 11:51:34,596 [INFO] paper_trader: FILLED: 0x4afe273c... YES 20196331.60 tokens @ 0.0001
+2026-02-26 11:51:34,597 [INFO] portfolio_state: Portfolio state saved: balance=84252.76, positions=5
+2026-02-26 11:51:34,598 [INFO] __main__: Portfolio after trades:
+2026-02-26 11:51:35,608 [INFO] __main__: Simulating market moves...
+2026-02-26 11:51:35,610 [INFO] paper_trader: 0xa670159e... PnL: $-1087.50 (price 0.4500)
+2026-02-26 11:51:35,610 [INFO] paper_trader: 0x1411e65d... PnL: $-1082.22 (price 0.4500)
+2026-02-26 11:51:35,611 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 11:51:35,611 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 11:51:35,611 [INFO] paper_trader: 0x4afe273c... PnL: $9086349.22 (price 0.4500)
+2026-02-26 11:51:38,234 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:51:38,237 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:51:40,628 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:51:40,630 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 11:51:43,249 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 11:51:43,250 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 12:01:27,370 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 12:01:27,372 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 12:01:27,372 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 12:01:27,372 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 12:01:28,689 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 12:01:28,690 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 12:01:28,712 [INFO] portfolio_state: Portfolio state loaded: balance=84252.76, positions=5
+2026-02-26 12:01:28,712 [INFO] __main__: Restored portfolio: balance=84252.76, positions=5
+2026-02-26 12:01:28,713 [INFO] paper_trader: CLOSED 0x4afe273c: 20196331.60 tokens @ 0.0001 -> 0.0000, PnL $-1999.02
+2026-02-26 12:01:28,714 [INFO] portfolio_state: Portfolio state saved: balance=84253.18, positions=4
+2026-02-26 12:01:28,714 [INFO] __main__: Stop-loss: closed 0x4afe273cde, PnL $-1999.02
+2026-02-26 12:01:28,714 [INFO] __main__: Excluded 4 held markets, candidates left: 3
+2026-02-26 12:01:34,070 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 12:01:34,093 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 12:01:34,094 [INFO] strategy: LLM generated 1 signals
+2026-02-26 12:01:34,094 [INFO] __main__: Generated 1 signals
+2026-02-26 12:01:34,095 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 12:01:34,095 [INFO] __main__: Risk approved: BUY 0x4afe273cde... $2,000
+2026-02-26 12:01:34,096 [INFO] paper_trader: FILLED: 0x4afe273c... YES 19652067.97 tokens @ 0.0001
+2026-02-26 12:01:34,099 [INFO] portfolio_state: Portfolio state saved: balance=82253.18, positions=5
+2026-02-26 12:01:34,099 [INFO] __main__: Portfolio after trades:
+2026-02-26 12:01:35,101 [INFO] __main__: Simulating market moves...
+2026-02-26 12:01:35,102 [INFO] paper_trader: 0xa670159e... PnL: $-1087.50 (price 0.4500)
+2026-02-26 12:01:35,102 [INFO] paper_trader: 0x1411e65d... PnL: $-1082.22 (price 0.4500)
+2026-02-26 12:01:35,102 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 12:01:35,103 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 12:01:35,103 [INFO] paper_trader: 0x4afe273c... PnL: $8841430.59 (price 0.4500)
+2026-02-26 12:01:37,725 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 12:01:37,727 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 12:01:40,212 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 12:01:40,214 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 12:01:42,633 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 12:01:42,637 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 12:11:29,902 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 12:11:29,910 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 12:11:29,910 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 12:11:29,910 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 12:11:31,295 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 12:11:31,296 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 12:11:31,316 [INFO] portfolio_state: Portfolio state loaded: balance=82253.18, positions=5
+2026-02-26 12:11:31,316 [INFO] __main__: Restored portfolio: balance=82253.18, positions=5
+2026-02-26 12:11:31,316 [INFO] paper_trader: CLOSED 0xa670159e (TP): 2027.77 tokens @ 0.9863 -> 1.0000, PnL $25.74
+2026-02-26 12:11:31,316 [INFO] paper_trader: CLOSED 0x1411e65d (TP): 2039.51 tokens @ 0.9806 -> 1.0000, PnL $37.46
+2026-02-26 12:11:31,317 [INFO] paper_trader: CLOSED 0x4afe273c (SL): 19652067.97 tokens @ 0.0001 -> 0.0000, PnL $-2004.11
+2026-02-26 12:11:31,319 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 12:11:31,320 [INFO] __main__: TP: closed 0xa670159e0a, PnL $25.74
+2026-02-26 12:11:31,320 [INFO] __main__: TP: closed 0x1411e65d30, PnL $37.46
+2026-02-26 12:11:31,320 [INFO] __main__: SL: closed 0x4afe273cde, PnL $-2004.11
+2026-02-26 12:11:31,320 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 12:11:38,474 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 12:11:38,490 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 12:11:38,491 [INFO] strategy: LLM generated 1 signals
+2026-02-26 12:11:38,492 [INFO] __main__: Generated 1 signals
+2026-02-26 12:11:38,492 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 12:11:38,494 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 12:11:38,494 [INFO] __main__: Portfolio after trades:
+2026-02-26 12:11:39,501 [INFO] __main__: Simulating market moves...
+2026-02-26 12:11:39,502 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 12:11:39,502 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 12:11:42,246 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 12:11:42,249 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 12:11:44,589 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 12:11:44,591 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 12:41:27,042 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 12:41:27,043 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 12:41:27,043 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 12:41:27,043 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 12:41:28,365 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 12:41:28,366 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 12:41:28,378 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 12:41:28,378 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 12:41:28,380 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 12:41:28,380 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 12:41:32,994 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 12:41:33,013 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 12:41:33,014 [INFO] strategy: LLM generated 1 signals
+2026-02-26 12:41:33,015 [INFO] __main__: Generated 1 signals
+2026-02-26 12:41:33,015 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 12:41:33,018 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 12:41:33,018 [INFO] __main__: Portfolio after trades:
+2026-02-26 12:41:34,031 [INFO] __main__: Simulating market moves...
+2026-02-26 12:41:34,033 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 12:41:34,033 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 12:41:36,180 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 12:41:36,181 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 12:51:27,816 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 12:51:27,817 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 12:51:27,818 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 12:51:27,818 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 12:51:29,189 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 12:51:29,190 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 12:51:29,192 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 12:51:29,193 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 12:51:29,193 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 12:51:29,194 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 12:51:35,987 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 12:51:36,014 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 12:51:36,017 [INFO] strategy: LLM generated 1 signals
+2026-02-26 12:51:36,018 [INFO] __main__: Generated 1 signals
+2026-02-26 12:51:36,018 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 12:51:36,021 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 12:51:36,022 [INFO] __main__: Portfolio after trades:
+2026-02-26 12:51:37,026 [INFO] __main__: Simulating market moves...
+2026-02-26 12:51:37,026 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 12:51:37,026 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 12:51:39,847 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 12:51:39,865 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 13:29:31,498 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 13:29:31,499 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 13:29:31,499 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 13:29:31,499 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 13:29:32,869 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 13:29:32,875 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 13:29:33,021 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 13:29:33,022 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 13:29:33,023 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:29:33,024 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 13:29:38,246 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 13:29:38,266 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 13:29:38,267 [INFO] strategy: LLM generated 1 signals
+2026-02-26 13:29:38,268 [INFO] __main__: Generated 1 signals
+2026-02-26 13:29:38,268 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 13:29:38,271 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:29:38,274 [INFO] __main__: Portfolio after trades:
+2026-02-26 13:29:39,280 [INFO] __main__: Simulating market moves...
+2026-02-26 13:29:39,281 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 13:29:39,282 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 13:29:41,909 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 13:29:41,911 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 13:31:26,582 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 13:31:26,583 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 13:31:26,583 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 13:31:26,584 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 13:31:27,934 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 13:31:27,935 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 13:31:27,936 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 13:31:27,936 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 13:31:27,937 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:31:27,937 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 13:31:32,197 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 13:31:32,215 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 13:31:32,216 [INFO] strategy: LLM generated 1 signals
+2026-02-26 13:31:32,216 [INFO] __main__: Generated 1 signals
+2026-02-26 13:31:32,217 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 13:31:32,220 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:31:32,221 [INFO] __main__: Portfolio after trades:
+2026-02-26 13:31:33,236 [INFO] __main__: Simulating market moves...
+2026-02-26 13:31:33,237 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 13:31:33,237 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 13:31:35,407 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 13:31:35,408 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 13:41:26,481 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 13:41:26,482 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 13:41:26,482 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 13:41:26,483 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 13:41:27,807 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 13:41:27,807 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 13:41:27,809 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 13:41:27,809 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 13:41:27,810 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:41:27,810 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 13:41:32,963 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 13:41:32,986 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 13:41:32,989 [INFO] strategy: LLM generated 1 signals
+2026-02-26 13:41:32,990 [INFO] __main__: Generated 1 signals
+2026-02-26 13:41:32,990 [WARNING] __main__: Risk rejected signal 1: INVALID_SL_TP_LEVELS
+2026-02-26 13:41:32,990 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 13:41:32,992 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:41:32,993 [INFO] __main__: Portfolio after trades:
+2026-02-26 13:41:34,003 [INFO] __main__: Simulating market moves...
+2026-02-26 13:41:34,004 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 13:41:34,005 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 13:41:36,686 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 13:41:36,690 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 13:51:26,468 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 13:51:26,469 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 13:51:26,469 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 13:51:26,469 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 13:51:27,839 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 13:51:27,839 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 13:51:27,840 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 13:51:27,841 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 13:51:27,843 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:51:27,843 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 13:51:32,654 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 13:51:32,674 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 13:51:32,674 [INFO] strategy: LLM generated 1 signals
+2026-02-26 13:51:32,675 [INFO] __main__: Generated 1 signals
+2026-02-26 13:51:32,675 [WARNING] __main__: Risk rejected signal 1: INVALID_SL_TP_LEVELS
+2026-02-26 13:51:32,676 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 13:51:32,678 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 13:51:32,679 [INFO] __main__: Portfolio after trades:
+2026-02-26 13:51:33,686 [INFO] __main__: Simulating market moves...
+2026-02-26 13:51:33,688 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 13:51:33,688 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 13:51:36,323 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 13:51:36,325 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:01:28,131 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 14:01:28,132 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 14:01:28,132 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 14:01:28,132 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 14:01:29,546 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 14:01:29,547 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 14:01:29,549 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 14:01:29,550 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 14:01:29,552 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 14:01:29,552 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 14:01:34,351 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 14:01:34,372 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 14:01:34,373 [INFO] strategy: LLM generated 1 signals
+2026-02-26 14:01:34,373 [INFO] __main__: Generated 1 signals
+2026-02-26 14:01:34,373 [WARNING] __main__: Risk rejected signal 1: INVALID_SL_TP_LEVELS
+2026-02-26 14:01:34,374 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 14:01:34,375 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 14:01:34,376 [INFO] __main__: Portfolio after trades:
+2026-02-26 14:01:35,385 [INFO] __main__: Simulating market moves...
+2026-02-26 14:01:35,386 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 14:01:35,386 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 14:01:37,741 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:01:37,742 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:11:26,537 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 14:11:26,538 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 14:11:26,538 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 14:11:26,538 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 14:11:27,873 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 14:11:27,873 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 14:11:27,875 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 14:11:27,875 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 14:11:27,876 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 14:11:27,876 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 14:11:32,627 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 14:11:32,648 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 14:11:32,649 [INFO] strategy: LLM generated 1 signals
+2026-02-26 14:11:32,649 [INFO] __main__: Generated 1 signals
+2026-02-26 14:11:32,650 [WARNING] __main__: Risk rejected signal 1: INVALID_SL_TP_LEVELS
+2026-02-26 14:11:32,650 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 14:11:32,653 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 14:11:32,654 [INFO] __main__: Portfolio after trades:
+2026-02-26 14:11:33,663 [INFO] __main__: Simulating market moves...
+2026-02-26 14:11:33,664 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 14:11:33,664 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 14:11:36,424 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:11:36,426 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:15:52,306 [INFO] __main__: Log file: C:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 14:15:52,307 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 14:15:52,307 [INFO] __main__: CWD: C:\Dev\Clawbot\clawbot-polymarket-agent | .env from: C:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 14:15:52,307 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 14:15:53,640 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 14:15:53,640 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 14:15:53,641 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 14:15:53,641 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 14:15:53,642 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 14:15:53,642 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 14:16:00,083 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 14:16:00,092 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 14:16:00,092 [INFO] strategy: LLM generated 1 signals
+2026-02-26 14:16:00,092 [INFO] __main__: Generated 1 signals
+2026-02-26 14:16:00,093 [WARNING] __main__: Risk rejected signal 1: INVALID_SL_TP_LEVELS
+2026-02-26 14:16:00,093 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 14:16:00,093 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 14:16:00,094 [INFO] __main__: Portfolio after trades:
+2026-02-26 14:16:01,101 [INFO] __main__: Simulating market moves...
+2026-02-26 14:16:01,102 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 14:16:01,102 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 14:16:02,430 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:16:02,431 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:21:26,562 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 14:21:26,564 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 14:21:26,564 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 14:21:26,564 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 14:21:28,298 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 14:21:28,299 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 14:21:28,301 [INFO] portfolio_state: Portfolio state loaded: balance=86316.79, positions=2
+2026-02-26 14:21:28,301 [INFO] __main__: Restored portfolio: balance=86316.79, positions=2
+2026-02-26 14:21:28,303 [INFO] portfolio_state: Portfolio state saved: balance=86316.79, positions=2
+2026-02-26 14:21:28,303 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 14:21:32,906 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 14:21:32,927 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 14:21:32,928 [INFO] strategy: LLM generated 1 signals
+2026-02-26 14:21:32,928 [INFO] __main__: Generated 1 signals
+2026-02-26 14:21:32,929 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-26 14:21:32,929 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-26 14:21:32,930 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-26 14:21:32,930 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4650 tp=0.5900
+2026-02-26 14:21:32,931 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 14:21:32,931 [INFO] __main__: Risk approved: BUY 0x4afe273cde... $2,000
+2026-02-26 14:21:32,931 [INFO] paper_trader: FILLED: 0x4afe273c... YES 3977.84 tokens @ 0.5028
+2026-02-26 14:21:32,934 [INFO] portfolio_state: Portfolio state saved: balance=84316.79, positions=3
+2026-02-26 14:21:32,934 [INFO] __main__: Portfolio after trades:
+2026-02-26 14:21:33,939 [INFO] __main__: Simulating market moves...
+2026-02-26 14:21:33,942 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 14:21:33,942 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 14:21:33,942 [INFO] paper_trader: 0x4afe273c... PnL: $-209.97 (price 0.4500)
+2026-02-26 14:21:36,187 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:21:36,189 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:21:38,803 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:21:38,805 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:31:26,604 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 14:31:26,605 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 14:31:26,605 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 14:31:26,605 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 14:31:27,933 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 14:31:27,933 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 14:31:27,947 [INFO] portfolio_state: Portfolio state loaded: balance=84316.79, positions=3
+2026-02-26 14:31:27,948 [INFO] __main__: Restored portfolio: balance=84316.79, positions=3
+2026-02-26 14:31:27,948 [INFO] paper_trader: CLOSED 0x4afe273c (SL): 3977.84 tokens @ 0.5028 -> 0.0000, PnL $-2000.00
+2026-02-26 14:31:27,950 [INFO] portfolio_state: Portfolio state saved: balance=84316.79, positions=2
+2026-02-26 14:31:27,951 [INFO] __main__: SL: closed 0x4afe273cde, PnL $-2000.00
+2026-02-26 14:31:27,951 [INFO] __main__: Excluded 2 held markets, candidates left: 5
+2026-02-26 14:31:32,749 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 14:31:32,769 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 14:31:32,770 [INFO] strategy: LLM generated 1 signals
+2026-02-26 14:31:32,771 [INFO] __main__: Generated 1 signals
+2026-02-26 14:31:32,771 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-26 14:31:32,771 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-26 14:31:32,772 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-26 14:31:32,772 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4650 tp=0.5900
+2026-02-26 14:31:32,773 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 14:31:32,773 [INFO] __main__: Risk approved: BUY 0x4afe273cde... $2,000
+2026-02-26 14:31:32,773 [INFO] paper_trader: FILLED: 0x4afe273c... YES 4003.62 tokens @ 0.4995
+2026-02-26 14:31:32,775 [INFO] portfolio_state: Portfolio state saved: balance=82316.79, positions=3
+2026-02-26 14:31:32,776 [INFO] __main__: Portfolio after trades:
+2026-02-26 14:31:33,784 [INFO] __main__: Simulating market moves...
+2026-02-26 14:31:33,784 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 14:31:33,784 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 14:31:33,785 [INFO] paper_trader: 0x4afe273c... PnL: $-198.37 (price 0.4500)
+2026-02-26 14:31:36,091 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:31:36,094 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:31:38,524 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:31:38,526 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:31:40,972 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:31:40,975 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:41:26,564 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 14:41:26,565 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 14:41:26,565 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 14:41:26,565 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 14:41:27,887 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 14:41:27,887 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 14:41:27,899 [INFO] portfolio_state: Portfolio state loaded: balance=82316.79, positions=3
+2026-02-26 14:41:27,899 [INFO] __main__: Restored portfolio: balance=82316.79, positions=3
+2026-02-26 14:41:27,901 [INFO] paper_trader: CLOSED 0x4afe273c (SL): 4003.62 tokens @ 0.4995 -> 0.0000, PnL $-2000.00
+2026-02-26 14:41:27,902 [INFO] portfolio_state: Portfolio state saved: balance=82316.79, positions=2
+2026-02-26 14:41:27,902 [INFO] __main__: SL cooldown 20 runs for: ['0x4afe273cde']
+2026-02-26 14:41:27,903 [INFO] __main__: SL: closed 0x4afe273cde, PnL $-2000.00
+2026-02-26 14:41:27,903 [INFO] __main__: Excluded 2 held + 1 SL cooldown, candidates left: 4
+2026-02-26 14:41:34,476 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 14:41:34,500 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 14:41:34,501 [INFO] strategy: LLM generated 1 signals
+2026-02-26 14:41:34,502 [INFO] __main__: Generated 1 signals
+2026-02-26 14:41:34,502 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-26 14:41:34,502 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-26 14:41:34,502 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-26 14:41:34,503 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4650 tp=0.5900
+2026-02-26 14:41:34,503 [WARNING] __main__: Risk rejected signal 1: EXCEEDED_SINGLE_POSITION
+2026-02-26 14:41:34,503 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 14:41:34,506 [INFO] portfolio_state: Portfolio state saved: balance=82316.79, positions=2
+2026-02-26 14:41:34,507 [INFO] __main__: Portfolio after trades:
+2026-02-26 14:41:35,511 [INFO] __main__: Simulating market moves...
+2026-02-26 14:41:35,512 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 14:41:35,512 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 14:41:37,932 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:41:37,933 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:41:40,364 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:41:40,365 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:51:26,581 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 14:51:26,582 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 14:51:26,582 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 14:51:26,582 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 14:51:27,946 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 14:51:27,946 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 14:51:27,966 [INFO] portfolio_state: Portfolio state loaded: balance=82316.79, positions=2
+2026-02-26 14:51:27,966 [INFO] __main__: Restored portfolio: balance=82316.79, positions=2
+2026-02-26 14:51:27,988 [INFO] portfolio_state: Portfolio state saved: balance=82316.79, positions=2
+2026-02-26 14:51:27,988 [INFO] __main__: Excluded 2 held + 1 SL cooldown, candidates left: 4
+2026-02-26 14:51:33,392 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 14:51:33,414 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 14:51:33,415 [INFO] strategy: LLM generated 1 signals
+2026-02-26 14:51:33,415 [INFO] __main__: Generated 1 signals
+2026-02-26 14:51:33,416 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-26 14:51:33,417 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-26 14:51:33,417 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-26 14:51:33,417 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4650 tp=0.5900
+2026-02-26 14:51:33,418 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1976 USD
+2026-02-26 14:51:33,418 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 14:51:33,419 [INFO] __main__: Risk approved: BUY 0xf2e631ea67... $1,976
+2026-02-26 14:51:33,419 [INFO] paper_trader: FILLED: 0xf2e631ea... YES 3977.09 tokens @ 0.4967
+2026-02-26 14:51:33,422 [INFO] portfolio_state: Portfolio state saved: balance=80341.19, positions=3
+2026-02-26 14:51:33,422 [INFO] __main__: Portfolio after trades:
+2026-02-26 14:51:34,431 [INFO] __main__: Simulating market moves...
+2026-02-26 14:51:34,433 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 14:51:34,433 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 14:51:34,434 [INFO] paper_trader: 0xf2e631ea... PnL: $-185.91 (price 0.4500)
+2026-02-26 14:51:36,610 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:51:36,612 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 14:51:39,080 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 14:51:39,081 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 15:01:26,529 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 15:01:26,530 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 15:01:26,530 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 15:01:26,530 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 15:01:28,042 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 15:01:28,043 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 15:01:28,058 [INFO] portfolio_state: Portfolio state loaded: balance=80341.19, positions=3
+2026-02-26 15:01:28,059 [INFO] __main__: Restored portfolio: balance=80341.19, positions=3
+2026-02-26 15:01:28,073 [INFO] paper_trader: CLOSED 0xf2e631ea (SL): 3977.09 tokens @ 0.4967 -> 0.0000, PnL $-1975.60
+2026-02-26 15:01:28,074 [INFO] portfolio_state: Portfolio state saved: balance=80341.19, positions=2
+2026-02-26 15:01:28,075 [INFO] __main__: SL cooldown 20 runs for: ['0xf2e631ea67']
+2026-02-26 15:01:28,075 [INFO] __main__: SL: closed 0xf2e631ea67, PnL $-1975.60
+2026-02-26 15:01:28,075 [INFO] __main__: Excluded 2 held + 2 SL cooldown, candidates left: 3
+2026-02-26 15:01:33,035 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 15:01:33,056 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 15:01:33,057 [INFO] strategy: LLM generated 1 signals
+2026-02-26 15:01:33,058 [INFO] __main__: Generated 1 signals
+2026-02-26 15:01:33,058 [INFO] __main__: Signal to risk: entry=0.9801 sl=0.9115 tp=0.9900 target_size=2000
+2026-02-26 15:01:33,058 [INFO] riskmanager: Risk eval: entry=0.9801 sl=0.9115 tp=0.9900
+2026-02-26 15:01:33,058 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.9801 sl=0.9115 tp=0.9900
+2026-02-26 15:01:33,058 [WARNING] riskmanager: Risk: INVALID_SL_TP — ratio=0.14 < min_rr=1.5 (entry=0.9801 sl=0.9115 tp=0.9900)
+2026-02-26 15:01:33,059 [WARNING] __main__: Risk rejected signal 1: INVALID_SL_TP_LEVELS
+2026-02-26 15:01:33,059 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-26 15:01:33,061 [INFO] portfolio_state: Portfolio state saved: balance=80341.19, positions=2
+2026-02-26 15:01:33,061 [INFO] __main__: Portfolio after trades:
+2026-02-26 15:01:34,068 [INFO] __main__: Simulating market moves...
+2026-02-26 15:01:34,071 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 15:01:34,071 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 15:01:36,769 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 15:01:36,770 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 15:01:39,211 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 15:01:39,214 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 15:11:28,457 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 15:11:28,458 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 15:11:28,458 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 15:11:28,458 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 15:11:29,851 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 15:11:29,852 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 15:11:29,868 [INFO] portfolio_state: Portfolio state loaded: balance=80341.19, positions=2
+2026-02-26 15:11:29,869 [INFO] __main__: Restored portfolio: balance=80341.19, positions=2
+2026-02-26 15:11:29,882 [INFO] portfolio_state: Portfolio state saved: balance=80341.19, positions=2
+2026-02-26 15:11:29,884 [INFO] __main__: Excluded 2 held + 2 SL cooldown, candidates left: 3
+2026-02-26 15:11:34,792 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 15:11:34,812 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 15:11:34,812 [INFO] strategy: LLM generated 1 signals
+2026-02-26 15:11:34,813 [INFO] __main__: Generated 1 signals
+2026-02-26 15:11:34,813 [INFO] __main__: Signal to risk: entry=0.9801 sl=0.9115 tp=0.9900 target_size=2000
+2026-02-26 15:11:34,814 [INFO] riskmanager: Risk eval: entry=0.9801 sl=0.9115 tp=0.9900
+2026-02-26 15:11:34,814 [INFO] riskmanager: Risk: entry=0.98 >= 0.95 — ratio не проверяем (TP у потолка), пропускаем
+2026-02-26 15:11:34,815 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1928 USD
+2026-02-26 15:11:34,815 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 15:11:34,816 [INFO] __main__: Risk approved: BUY 0xa670159e0a... $1,928
+2026-02-26 15:11:34,816 [INFO] paper_trader: FILLED: 0xa670159e... YES 1974.83 tokens @ 0.9764
+2026-02-26 15:11:34,818 [INFO] portfolio_state: Portfolio state saved: balance=78413.00, positions=3
+2026-02-26 15:11:34,818 [INFO] __main__: Portfolio after trades:
+2026-02-26 15:11:35,830 [INFO] __main__: Simulating market moves...
+2026-02-26 15:11:35,834 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 15:11:35,834 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 15:11:35,834 [INFO] paper_trader: 0xa670159e... PnL: $-1039.51 (price 0.4500)
+2026-02-26 15:11:38,473 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 15:11:38,475 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 15:11:40,998 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 15:11:41,000 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 15:21:26,577 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 15:21:26,578 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 15:21:26,578 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 15:21:26,578 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-26 15:21:28,220 [INFO] datafeed: Fetched 7 politics markets
+2026-02-26 15:21:28,221 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-26 15:21:28,234 [INFO] portfolio_state: Portfolio state loaded: balance=78413.00, positions=3
+2026-02-26 15:21:28,234 [INFO] __main__: Restored portfolio: balance=78413.00, positions=3
+2026-02-26 15:21:28,253 [INFO] paper_trader: CLOSED 0xa670159e (TP): 1974.83 tokens @ 0.9764 -> 1.0000, PnL $44.67
+2026-02-26 15:21:28,254 [INFO] portfolio_state: Portfolio state saved: balance=80385.86, positions=2
+2026-02-26 15:21:28,254 [INFO] __main__: TP: closed 0xa670159e0a, PnL $44.67
+2026-02-26 15:21:28,255 [INFO] __main__: Excluded 2 held + 2 SL cooldown, candidates left: 3
+2026-02-26 15:21:33,461 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-26 15:21:33,477 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-26 15:21:33,477 [INFO] strategy: LLM generated 1 signals
+2026-02-26 15:21:33,478 [INFO] __main__: Generated 1 signals
+2026-02-26 15:21:33,478 [INFO] __main__: Signal to risk: entry=0.9801 sl=0.9115 tp=0.9900 target_size=2000
+2026-02-26 15:21:33,479 [INFO] riskmanager: Risk eval: entry=0.9801 sl=0.9115 tp=0.9900
+2026-02-26 15:21:33,479 [INFO] riskmanager: Risk: entry=0.98 >= 0.95 — ratio не проверяем (TP у потолка), пропускаем
+2026-02-26 15:21:33,479 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1929 USD
+2026-02-26 15:21:33,480 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-26 15:21:33,481 [INFO] __main__: Risk approved: BUY 0xa670159e0a... $1,929
+2026-02-26 15:21:33,481 [INFO] paper_trader: FILLED: 0xa670159e... YES 1969.63 tokens @ 0.9795
+2026-02-26 15:21:33,484 [INFO] portfolio_state: Portfolio state saved: balance=78456.60, positions=3
+2026-02-26 15:21:33,484 [INFO] __main__: Portfolio after trades:
+2026-02-26 15:21:34,486 [INFO] __main__: Simulating market moves...
+2026-02-26 15:21:34,488 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-26 15:21:34,489 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-26 15:21:34,489 [INFO] paper_trader: 0xa670159e... PnL: $-1042.93 (price 0.4500)
+2026-02-26 15:21:36,767 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 15:21:36,768 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 15:21:39,463 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 15:21:39,464 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 15:21:41,883 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-26 15:21:41,885 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-26 16:11:59,665 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-26 16:11:59,666 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-26 16:11:59,666 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-26 16:11:59,666 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 05:00:22,132 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 05:00:22,133 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 05:00:22,133 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 05:00:22,133 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 05:00:23,502 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 05:00:23,502 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 05:00:23,519 [INFO] portfolio_state: Portfolio state loaded: balance=78456.60, positions=3
+2026-02-27 05:00:23,519 [INFO] __main__: Restored portfolio: balance=78456.60, positions=3
+2026-02-27 05:00:23,533 [INFO] paper_trader: CLOSED 0xa670159e (TP): 1969.63 tokens @ 0.9795 -> 1.0000, PnL $38.39
+2026-02-27 05:00:23,534 [INFO] portfolio_state: Portfolio state saved: balance=80424.26, positions=2
+2026-02-27 05:00:23,534 [INFO] __main__: TP cooldown 5 runs for: ['0xa670159e0a']
+2026-02-27 05:00:23,534 [INFO] __main__: TP: closed 0xa670159e0a, PnL $38.39
+2026-02-27 05:00:23,535 [INFO] __main__: Excluded 2 held + 2 SL + 1 TP cooldown, candidates left: 2
+2026-02-27 09:52:36,498 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 09:52:36,499 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 09:52:36,499 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 09:52:36,499 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 09:52:37,861 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 09:52:37,861 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 09:52:37,877 [INFO] portfolio_state: Portfolio state loaded: balance=80424.26, positions=2
+2026-02-27 09:52:37,877 [INFO] __main__: Restored portfolio: balance=80424.26, positions=2
+2026-02-27 09:52:37,904 [INFO] portfolio_state: Portfolio state saved: balance=80424.26, positions=2
+2026-02-27 09:52:37,905 [INFO] __main__: Excluded 2 held + 2 SL + 1 TP cooldown, candidates left: 2
+2026-02-27 09:52:46,089 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 09:52:46,109 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 09:52:46,109 [INFO] strategy: LLM generated 1 signals
+2026-02-27 09:52:46,110 [INFO] __main__: Generated 1 signals
+2026-02-27 09:52:46,110 [INFO] __main__: Signal to risk: entry=0.9801 sl=0.9115 tp=0.9900 target_size=2000
+2026-02-27 09:52:46,111 [INFO] riskmanager: Risk eval: entry=0.9801 sl=0.9115 tp=0.9900
+2026-02-27 09:52:46,111 [INFO] riskmanager: Risk: entry=0.98 >= 0.95 — ratio не проверяем (TP у потолка), пропускаем
+2026-02-27 09:52:46,112 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1930 USD
+2026-02-27 09:52:46,113 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-27 09:52:46,113 [INFO] __main__: Risk approved: BUY 0x1411e65d30... $1,930
+2026-02-27 09:52:46,114 [INFO] paper_trader: FILLED: 0x1411e65d... YES 1971.24 tokens @ 0.9792
+2026-02-27 09:52:46,116 [INFO] portfolio_state: Portfolio state saved: balance=78494.08, positions=3
+2026-02-27 09:52:46,116 [INFO] __main__: Portfolio after trades:
+2026-02-27 09:52:47,122 [INFO] __main__: Simulating market moves...
+2026-02-27 09:52:47,122 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 09:52:47,122 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 09:52:47,123 [INFO] paper_trader: 0x1411e65d... PnL: $-1043.12 (price 0.4500)
+2026-02-27 09:52:50,235 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 09:52:50,238 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 09:52:52,665 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 09:52:52,666 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:01:26,994 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 10:01:26,995 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 10:01:26,995 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 10:01:26,997 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 10:01:28,355 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 10:01:28,355 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 10:01:28,373 [INFO] portfolio_state: Portfolio state loaded: balance=78494.08, positions=3
+2026-02-27 10:01:28,373 [INFO] __main__: Restored portfolio: balance=78494.08, positions=3
+2026-02-27 10:01:28,404 [INFO] paper_trader: CLOSED 0x1411e65d (TP): 1971.24 tokens @ 0.9792 -> 1.0000, PnL $39.07
+2026-02-27 10:01:28,406 [INFO] portfolio_state: Portfolio state saved: balance=80463.34, positions=2
+2026-02-27 10:01:28,407 [INFO] __main__: TP cooldown 5 runs for: ['0x1411e65d30']
+2026-02-27 10:01:28,407 [INFO] __main__: TP: closed 0x1411e65d30, PnL $39.07
+2026-02-27 10:01:28,407 [INFO] __main__: Excluded 2 held + 2 SL + 2 TP cooldown, candidates left: 1
+2026-02-27 10:01:33,475 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 10:01:33,496 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 10:01:33,499 [INFO] strategy: LLM generated 1 signals
+2026-02-27 10:01:33,499 [INFO] __main__: Generated 1 signals
+2026-02-27 10:01:33,500 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-27 10:01:33,500 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-27 10:01:33,501 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-27 10:01:33,501 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4650 tp=0.5900
+2026-02-27 10:01:33,501 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1931 USD
+2026-02-27 10:01:33,502 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-27 10:01:33,502 [INFO] __main__: Risk approved: BUY 0x26db7bd607... $1,931
+2026-02-27 10:01:33,503 [INFO] paper_trader: FILLED: 0x26db7bd6... YES 3888.15 tokens @ 0.4967
+2026-02-27 10:01:33,505 [INFO] portfolio_state: Portfolio state saved: balance=78532.22, positions=3
+2026-02-27 10:01:33,506 [INFO] __main__: Portfolio after trades:
+2026-02-27 10:01:34,521 [INFO] __main__: Simulating market moves...
+2026-02-27 10:01:34,521 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 10:01:34,523 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 10:01:34,524 [INFO] paper_trader: 0x26db7bd6... PnL: $-181.45 (price 0.4500)
+2026-02-27 10:01:36,571 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:01:36,572 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:01:38,442 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:01:38,448 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:01:40,173 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:01:40,174 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:11:26,788 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 10:11:26,789 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 10:11:26,789 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 10:11:26,789 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 10:11:28,138 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 10:11:28,140 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 10:11:28,156 [INFO] portfolio_state: Portfolio state loaded: balance=78532.22, positions=3
+2026-02-27 10:11:28,157 [INFO] __main__: Restored portfolio: balance=78532.22, positions=3
+2026-02-27 10:11:28,187 [INFO] paper_trader: CLOSED 0x26db7bd6 (SL): 3888.15 tokens @ 0.4967 -> 0.0000, PnL $-1931.07
+2026-02-27 10:11:28,188 [INFO] portfolio_state: Portfolio state saved: balance=78532.27, positions=2
+2026-02-27 10:11:28,189 [INFO] __main__: SL cooldown 20 runs for: ['0x26db7bd607']
+2026-02-27 10:11:28,189 [INFO] __main__: SL: closed 0x26db7bd607, PnL $-1931.07
+2026-02-27 10:11:28,189 [INFO] __main__: Excluded 2 held + 3 SL + 2 TP cooldown, candidates left: 0
+2026-02-27 10:11:33,783 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 10:11:33,803 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 10:11:33,803 [INFO] strategy: LLM generated 1 signals
+2026-02-27 10:11:33,804 [INFO] __main__: Generated 1 signals
+2026-02-27 10:11:33,805 [INFO] __main__: Signal to risk: entry=0.4158 sl=0.3950 tp=0.4906 target_size=2000
+2026-02-27 10:11:33,805 [INFO] riskmanager: Risk eval: entry=0.4158 sl=0.3950 tp=0.4906
+2026-02-27 10:11:33,805 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1885 USD
+2026-02-27 10:11:33,806 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-27 10:11:33,806 [INFO] __main__: Risk approved: BUY 0xabcdef1234... $1,885
+2026-02-27 10:11:33,807 [INFO] paper_trader: FILLED: 0xabcdef12... YES 4553.42 tokens @ 0.4139
+2026-02-27 10:11:33,810 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:11:33,811 [INFO] __main__: Portfolio after trades:
+2026-02-27 10:11:34,821 [INFO] __main__: Simulating market moves...
+2026-02-27 10:11:34,821 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 10:11:34,822 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 10:11:34,822 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 10:11:37,162 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:11:37,163 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:11:39,623 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:11:39,625 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:11:41,968 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:11:41,969 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:21:28,679 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 10:21:28,680 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 10:21:28,680 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 10:21:28,680 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 10:21:30,274 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 10:21:30,275 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 10:21:30,289 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 10:21:30,290 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 10:21:30,328 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:21:30,328 [INFO] __main__: Excluded 3 held + 3 SL + 2 TP cooldown, candidates left: 0
+2026-02-27 10:21:33,194 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 10:21:33,214 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 10:21:33,215 [INFO] strategy: LLM generated 1 signals
+2026-02-27 10:21:33,215 [INFO] __main__: Generated 1 signals
+2026-02-27 10:21:33,215 [INFO] __main__: Signal to risk: entry=0.4158 sl=0.3992 tp=0.4906 target_size=2000
+2026-02-27 10:21:33,215 [INFO] riskmanager: Risk eval: entry=0.4158 sl=0.3992 tp=0.4906
+2026-02-27 10:21:33,216 [WARNING] __main__: Risk rejected signal 1: EXCEEDED_SINGLE_POSITION
+2026-02-27 10:21:33,216 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 10:21:33,218 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:21:33,218 [INFO] __main__: Portfolio after trades:
+2026-02-27 10:21:34,229 [INFO] __main__: Simulating market moves...
+2026-02-27 10:21:34,230 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 10:21:34,230 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 10:21:34,231 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 10:21:37,451 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:21:37,452 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:31:26,735 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 10:31:26,736 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 10:31:26,736 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 10:31:26,736 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 10:31:28,088 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 10:31:28,089 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 10:31:28,091 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 10:31:28,091 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 10:31:28,127 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:31:28,127 [INFO] __main__: Excluded 3 held + 3 SL + 1 TP cooldown, candidates left: 1
+2026-02-27 10:31:32,469 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 10:31:32,488 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 10:31:32,489 [INFO] strategy: LLM generated 1 signals
+2026-02-27 10:31:32,489 [INFO] __main__: Generated 1 signals
+2026-02-27 10:31:32,490 [INFO] __main__: Signal to risk: entry=0.9801 sl=0.9409 tp=0.9900 target_size=2000
+2026-02-27 10:31:32,490 [INFO] riskmanager: Risk eval: entry=0.9801 sl=0.9409 tp=0.9900
+2026-02-27 10:31:32,491 [WARNING] riskmanager: Risk: ENTRY_TOO_HIGH entry=0.98 > 0.90 (мало апсайда, большой даунсайд)
+2026-02-27 10:31:32,491 [WARNING] __main__: Risk rejected signal 1: ENTRY_TOO_HIGH
+2026-02-27 10:31:32,491 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 10:31:32,494 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:31:32,495 [INFO] __main__: Portfolio after trades:
+2026-02-27 10:31:33,502 [INFO] __main__: Simulating market moves...
+2026-02-27 10:31:33,503 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 10:31:33,504 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 10:31:33,504 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 10:31:35,703 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:31:35,705 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:41:26,767 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 10:41:26,772 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 10:41:26,772 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 10:41:26,772 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 10:41:28,150 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 10:41:28,150 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 10:41:28,152 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 10:41:28,152 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 10:41:28,189 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:41:28,189 [INFO] __main__: Excluded 3 held + 3 SL + 1 TP cooldown, candidates left: 1
+2026-02-27 10:41:28,189 [INFO] __main__: Excluded 1 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 10:41:31,708 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 10:41:31,721 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 10:41:31,721 [INFO] strategy: LLM generated 1 signals
+2026-02-27 10:41:31,722 [INFO] __main__: Generated 1 signals
+2026-02-27 10:41:31,722 [INFO] __main__: Signal to risk: entry=0.4158 sl=0.3992 tp=0.4906 target_size=2000
+2026-02-27 10:41:31,722 [INFO] riskmanager: Risk eval: entry=0.4158 sl=0.3992 tp=0.4906
+2026-02-27 10:41:31,723 [WARNING] __main__: Risk rejected signal 1: EXCEEDED_SINGLE_POSITION
+2026-02-27 10:41:31,723 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 10:41:31,726 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:41:31,726 [INFO] __main__: Portfolio after trades:
+2026-02-27 10:41:32,743 [INFO] __main__: Simulating market moves...
+2026-02-27 10:41:32,745 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 10:41:32,746 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 10:41:32,746 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 10:41:34,782 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:41:34,783 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 10:51:26,785 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 10:51:26,786 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 10:51:26,786 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 10:51:26,786 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 10:51:28,090 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 10:51:28,090 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 10:51:28,092 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 10:51:28,092 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 10:51:28,123 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:51:28,123 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 10:51:28,124 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 10:51:28,292 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 10:51:28,293 [INFO] __main__: Generated 0 signals
+2026-02-27 10:51:28,293 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 10:51:28,294 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 10:51:28,294 [INFO] __main__: Portfolio after trades:
+2026-02-27 10:51:29,307 [INFO] __main__: Simulating market moves...
+2026-02-27 10:51:29,308 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 10:51:29,309 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 10:51:29,309 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 10:51:30,673 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 10:51:30,675 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 11:01:26,915 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 11:01:26,916 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 11:01:26,916 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 11:01:26,916 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 11:01:28,293 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 11:01:28,293 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 11:01:28,295 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 11:01:28,295 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 11:01:28,321 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:01:28,321 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 11:01:28,322 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 11:01:28,493 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 11:01:28,494 [INFO] __main__: Generated 0 signals
+2026-02-27 11:01:28,494 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 11:01:28,495 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:01:28,497 [INFO] __main__: Portfolio after trades:
+2026-02-27 11:01:29,506 [INFO] __main__: Simulating market moves...
+2026-02-27 11:01:29,508 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 11:01:29,508 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 11:01:29,508 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 11:01:30,844 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 11:01:30,848 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 11:11:26,870 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 11:11:26,871 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 11:11:26,871 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 11:11:26,871 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 11:11:28,185 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 11:11:28,186 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 11:11:28,187 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 11:11:28,187 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 11:11:28,205 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:11:28,205 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 11:11:28,205 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 11:11:28,376 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 11:11:28,377 [INFO] __main__: Generated 0 signals
+2026-02-27 11:11:28,377 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 11:11:28,378 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:11:28,378 [INFO] __main__: Portfolio after trades:
+2026-02-27 11:11:29,383 [INFO] __main__: Simulating market moves...
+2026-02-27 11:11:29,384 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 11:11:29,385 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 11:11:29,385 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 11:11:30,742 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 11:11:30,746 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 11:21:26,860 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 11:21:26,861 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 11:21:26,861 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 11:21:26,861 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 11:21:28,217 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 11:21:28,217 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 11:21:28,219 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 11:21:28,219 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 11:21:28,243 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:21:28,243 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 11:21:28,243 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 11:21:28,409 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 11:21:28,410 [INFO] __main__: Generated 0 signals
+2026-02-27 11:21:28,410 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 11:21:28,411 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:21:28,411 [INFO] __main__: Portfolio after trades:
+2026-02-27 11:21:29,413 [INFO] __main__: Simulating market moves...
+2026-02-27 11:21:29,415 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 11:21:29,415 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 11:21:29,415 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 11:21:30,798 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 11:21:30,803 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 11:31:26,815 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 11:31:26,816 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 11:31:26,816 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 11:31:26,816 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 11:31:28,169 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 11:31:28,170 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 11:31:28,171 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 11:31:28,171 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 11:31:28,184 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:31:28,185 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 11:31:28,185 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 11:31:28,358 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 11:31:28,359 [INFO] __main__: Generated 0 signals
+2026-02-27 11:31:28,359 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 11:31:28,360 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:31:28,361 [INFO] __main__: Portfolio after trades:
+2026-02-27 11:31:29,367 [INFO] __main__: Simulating market moves...
+2026-02-27 11:31:29,368 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 11:31:29,368 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 11:31:29,369 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 11:31:30,672 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 11:31:30,674 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 11:41:26,913 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 11:41:26,914 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 11:41:26,914 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 11:41:26,914 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 11:41:28,286 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 11:41:28,286 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 11:41:28,289 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 11:41:28,289 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 11:41:28,315 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:41:28,315 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 11:41:28,315 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 11:41:28,481 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 11:41:28,482 [INFO] __main__: Generated 0 signals
+2026-02-27 11:41:28,482 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 11:41:28,483 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:41:28,483 [INFO] __main__: Portfolio after trades:
+2026-02-27 11:41:29,488 [INFO] __main__: Simulating market moves...
+2026-02-27 11:41:29,488 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 11:41:29,488 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 11:41:29,489 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 11:41:30,934 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 11:41:30,937 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 11:51:28,860 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 11:51:28,861 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 11:51:28,862 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 11:51:28,862 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 11:51:30,277 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 11:51:30,278 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 11:51:30,291 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 11:51:30,291 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 11:51:30,314 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:51:30,315 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 11:51:30,315 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 11:51:30,512 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 11:51:30,514 [INFO] __main__: Generated 0 signals
+2026-02-27 11:51:30,514 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 11:51:30,515 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 11:51:30,516 [INFO] __main__: Portfolio after trades:
+2026-02-27 11:51:31,526 [INFO] __main__: Simulating market moves...
+2026-02-27 11:51:31,531 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 11:51:31,532 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 11:51:31,532 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 11:51:34,320 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 11:51:34,325 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:01:26,958 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 12:01:26,959 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 12:01:26,959 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 12:01:26,959 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 12:01:28,319 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 12:01:28,320 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 12:01:28,323 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 12:01:28,323 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 12:01:28,344 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 12:01:28,344 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 12:01:28,344 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 12:01:28,511 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 12:01:28,512 [INFO] __main__: Generated 0 signals
+2026-02-27 12:01:28,513 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 12:01:28,514 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 12:01:28,514 [INFO] __main__: Portfolio after trades:
+2026-02-27 12:01:29,521 [INFO] __main__: Simulating market moves...
+2026-02-27 12:01:29,521 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 12:01:29,522 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 12:01:29,522 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 12:01:30,838 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:01:30,844 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:11:26,932 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 12:11:26,934 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 12:11:26,934 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 12:11:26,934 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 12:11:28,287 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 12:11:28,288 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 12:11:28,291 [INFO] portfolio_state: Portfolio state loaded: balance=76647.49, positions=3
+2026-02-27 12:11:28,291 [INFO] __main__: Restored portfolio: balance=76647.49, positions=3
+2026-02-27 12:11:28,315 [INFO] portfolio_state: Portfolio state saved: balance=76647.49, positions=3
+2026-02-27 12:11:28,315 [INFO] __main__: Excluded 3 held + 2 SL + 0 TP cooldown, candidates left: 3
+2026-02-27 12:11:28,315 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 1
+2026-02-27 12:11:34,931 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 12:11:34,953 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 12:11:34,955 [INFO] strategy: LLM generated 1 signals
+2026-02-27 12:11:34,956 [INFO] __main__: Generated 1 signals
+2026-02-27 12:11:34,956 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-27 12:11:34,957 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-27 12:11:34,957 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-27 12:11:34,957 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4800 tp=0.5900
+2026-02-27 12:11:34,957 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1380 USD
+2026-02-27 12:11:34,958 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-27 12:11:34,958 [INFO] __main__: Risk approved: BUY 0x4afe273cde... $1,380
+2026-02-27 12:11:34,958 [INFO] paper_trader: FILLED: 0x4afe273c... YES 2785.55 tokens @ 0.4953
+2026-02-27 12:11:34,961 [INFO] portfolio_state: Portfolio state saved: balance=75267.84, positions=4
+2026-02-27 12:11:34,962 [INFO] __main__: Portfolio after trades:
+2026-02-27 12:11:35,978 [INFO] __main__: Simulating market moves...
+2026-02-27 12:11:35,979 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 12:11:35,980 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 12:11:35,980 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 12:11:35,980 [INFO] paper_trader: 0x4afe273c... PnL: $-126.16 (price 0.4500)
+2026-02-27 12:11:38,664 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:11:38,667 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:11:41,042 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:11:41,045 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:21:26,910 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 12:21:26,911 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 12:21:26,911 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 12:21:26,911 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 12:21:28,480 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 12:21:28,480 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 12:21:28,499 [INFO] portfolio_state: Portfolio state loaded: balance=75267.84, positions=4
+2026-02-27 12:21:28,499 [INFO] __main__: Restored portfolio: balance=75267.84, positions=4
+2026-02-27 12:21:28,515 [INFO] paper_trader: CLOSED 0x4afe273c (SL): 2785.55 tokens @ 0.4953 -> 0.0000, PnL $-1379.65
+2026-02-27 12:21:28,515 [INFO] portfolio_state: Portfolio state saved: balance=75267.84, positions=3
+2026-02-27 12:21:28,516 [INFO] __main__: SL cooldown 20 runs for: ['0x4afe273cde']
+2026-02-27 12:21:28,516 [INFO] __main__: SL: closed 0x4afe273cde, PnL $-1379.65
+2026-02-27 12:21:28,516 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 12:21:28,516 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 12:21:28,687 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 12:21:28,688 [INFO] __main__: Generated 0 signals
+2026-02-27 12:21:28,688 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 12:21:28,689 [INFO] portfolio_state: Portfolio state saved: balance=75267.84, positions=3
+2026-02-27 12:21:28,689 [INFO] __main__: Portfolio after trades:
+2026-02-27 12:21:29,692 [INFO] __main__: Simulating market moves...
+2026-02-27 12:21:29,692 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 12:21:29,693 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 12:21:29,694 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 12:21:31,378 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:21:31,382 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:21:33,719 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:21:33,722 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:31:26,875 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 12:31:26,875 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 12:31:26,876 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 12:31:26,876 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 12:31:28,347 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 12:31:28,348 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 12:31:28,363 [INFO] portfolio_state: Portfolio state loaded: balance=75267.84, positions=3
+2026-02-27 12:31:28,363 [INFO] __main__: Restored portfolio: balance=75267.84, positions=3
+2026-02-27 12:31:28,384 [INFO] portfolio_state: Portfolio state saved: balance=75267.84, positions=3
+2026-02-27 12:31:28,385 [INFO] __main__: Excluded 3 held + 2 SL + 0 TP cooldown, candidates left: 3
+2026-02-27 12:31:28,385 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 1
+2026-02-27 12:31:32,373 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 12:31:32,396 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 12:31:32,398 [INFO] strategy: LLM generated 1 signals
+2026-02-27 12:31:32,398 [INFO] __main__: Generated 1 signals
+2026-02-27 12:31:32,399 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-27 12:31:32,399 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-27 12:31:32,399 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-27 12:31:32,400 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4800 tp=0.5900
+2026-02-27 12:31:32,400 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1355 USD
+2026-02-27 12:31:32,400 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-27 12:31:32,401 [INFO] __main__: Risk approved: BUY 0xf2e631ea67... $1,355
+2026-02-27 12:31:32,401 [INFO] paper_trader: FILLED: 0xf2e631ea... YES 2686.58 tokens @ 0.5043
+2026-02-27 12:31:32,403 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=4
+2026-02-27 12:31:32,404 [INFO] __main__: Portfolio after trades:
+2026-02-27 12:31:33,407 [INFO] __main__: Simulating market moves...
+2026-02-27 12:31:33,410 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 12:31:33,410 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 12:31:33,410 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 12:31:33,411 [INFO] paper_trader: 0xf2e631ea... PnL: $-145.86 (price 0.4500)
+2026-02-27 12:31:36,134 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:31:36,137 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:31:38,641 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:31:38,646 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:41:26,857 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 12:41:26,858 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 12:41:26,858 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 12:41:26,858 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 12:41:28,195 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 12:41:28,195 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 12:41:28,207 [INFO] portfolio_state: Portfolio state loaded: balance=73913.02, positions=4
+2026-02-27 12:41:28,207 [INFO] __main__: Restored portfolio: balance=73913.02, positions=4
+2026-02-27 12:41:28,226 [INFO] paper_trader: CLOSED 0xf2e631ea (SL): 2686.59 tokens @ 0.5043 -> 0.0000, PnL $-1354.82
+2026-02-27 12:41:28,227 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 12:41:28,227 [INFO] __main__: SL cooldown 20 runs for: ['0xf2e631ea67']
+2026-02-27 12:41:28,227 [INFO] __main__: SL: closed 0xf2e631ea67, PnL $-1354.82
+2026-02-27 12:41:28,227 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 12:41:28,227 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 12:41:28,393 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 12:41:28,394 [INFO] __main__: Generated 0 signals
+2026-02-27 12:41:28,395 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 12:41:28,396 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 12:41:28,396 [INFO] __main__: Portfolio after trades:
+2026-02-27 12:41:29,406 [INFO] __main__: Simulating market moves...
+2026-02-27 12:41:29,406 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 12:41:29,407 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 12:41:29,407 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 12:41:30,758 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:41:30,761 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:41:33,235 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:41:33,237 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 12:51:26,956 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 12:51:26,957 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 12:51:26,957 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 12:51:26,958 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 12:51:28,317 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 12:51:28,317 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 12:51:28,332 [INFO] portfolio_state: Portfolio state loaded: balance=73913.02, positions=3
+2026-02-27 12:51:28,332 [INFO] __main__: Restored portfolio: balance=73913.02, positions=3
+2026-02-27 12:51:28,346 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 12:51:28,346 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 12:51:28,346 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 12:51:28,515 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 12:51:28,516 [INFO] __main__: Generated 0 signals
+2026-02-27 12:51:28,516 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 12:51:28,517 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 12:51:28,517 [INFO] __main__: Portfolio after trades:
+2026-02-27 12:51:29,531 [INFO] __main__: Simulating market moves...
+2026-02-27 12:51:29,531 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 12:51:29,532 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 12:51:29,532 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 12:51:30,850 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 12:51:30,852 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:01:27,351 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 13:01:27,352 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 13:01:27,352 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 13:01:27,353 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 13:01:28,667 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 13:01:28,668 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 13:01:28,670 [INFO] portfolio_state: Portfolio state loaded: balance=73913.02, positions=3
+2026-02-27 13:01:28,670 [INFO] __main__: Restored portfolio: balance=73913.02, positions=3
+2026-02-27 13:01:28,688 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 13:01:28,688 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 13:01:28,689 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 13:01:28,853 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 13:01:28,854 [INFO] __main__: Generated 0 signals
+2026-02-27 13:01:28,855 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 13:01:28,855 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 13:01:28,858 [INFO] __main__: Portfolio after trades:
+2026-02-27 13:01:29,872 [INFO] __main__: Simulating market moves...
+2026-02-27 13:01:29,873 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 13:01:29,873 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 13:01:29,874 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 13:01:31,176 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:01:31,177 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:11:26,955 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 13:11:26,956 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 13:11:26,957 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 13:11:26,957 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 13:11:28,276 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 13:11:28,277 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 13:11:28,280 [INFO] portfolio_state: Portfolio state loaded: balance=73913.02, positions=3
+2026-02-27 13:11:28,280 [INFO] __main__: Restored portfolio: balance=73913.02, positions=3
+2026-02-27 13:11:28,297 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 13:11:28,297 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 13:11:28,297 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 13:11:28,466 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 13:11:28,468 [INFO] __main__: Generated 0 signals
+2026-02-27 13:11:28,468 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 13:11:28,469 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 13:11:28,469 [INFO] __main__: Portfolio after trades:
+2026-02-27 13:11:29,484 [INFO] __main__: Simulating market moves...
+2026-02-27 13:11:29,485 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 13:11:29,485 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 13:11:29,486 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 13:11:30,834 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:11:30,836 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:21:27,028 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 13:21:27,029 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 13:21:27,029 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 13:21:27,029 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 13:21:28,349 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 13:21:28,350 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 13:21:28,353 [INFO] portfolio_state: Portfolio state loaded: balance=73913.02, positions=3
+2026-02-27 13:21:28,353 [INFO] __main__: Restored portfolio: balance=73913.02, positions=3
+2026-02-27 13:21:28,376 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 13:21:28,377 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 13:21:28,377 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 13:21:28,543 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 13:21:28,543 [INFO] __main__: Generated 0 signals
+2026-02-27 13:21:28,544 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 13:21:28,544 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 13:21:28,545 [INFO] __main__: Portfolio after trades:
+2026-02-27 13:21:29,546 [INFO] __main__: Simulating market moves...
+2026-02-27 13:21:29,548 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 13:21:29,548 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 13:21:29,548 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 13:21:30,889 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:21:30,891 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:31:27,009 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 13:31:27,010 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 13:31:27,010 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 13:31:27,010 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 13:31:29,264 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 13:31:29,264 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 13:31:29,267 [INFO] portfolio_state: Portfolio state loaded: balance=73913.02, positions=3
+2026-02-27 13:31:29,267 [INFO] __main__: Restored portfolio: balance=73913.02, positions=3
+2026-02-27 13:31:29,294 [INFO] portfolio_state: Portfolio state saved: balance=73913.02, positions=3
+2026-02-27 13:31:29,294 [INFO] __main__: Excluded 3 held + 2 SL + 0 TP cooldown, candidates left: 3
+2026-02-27 13:31:29,296 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 1
+2026-02-27 13:31:34,928 [INFO] httpx: HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-02-27 13:31:34,949 [INFO] strategy: LLM raw: 1, после проверки полей: 1
+2026-02-27 13:31:34,950 [INFO] strategy: LLM generated 1 signals
+2026-02-27 13:31:34,951 [INFO] __main__: Generated 1 signals
+2026-02-27 13:31:34,951 [INFO] __main__: Signal to risk: entry=0.0000 sl=-0.0100 tp=0.0100 target_size=2000
+2026-02-27 13:31:34,951 [INFO] riskmanager: Risk eval: entry=0.0000 sl=-0.0100 tp=0.0100
+2026-02-27 13:31:34,952 [INFO] riskmanager: Risk: entry был 0, подставлен default 0.5
+2026-02-27 13:31:34,952 [INFO] riskmanager: Risk: SL/TP пересчитаны по конфигу: entry=0.5000 sl=0.4800 tp=0.5900
+2026-02-27 13:31:34,952 [INFO] riskmanager: Risk: размер подрезан до лимита по рынку: 1330 USD
+2026-02-27 13:31:34,953 [INFO] __main__: Blocks 1-3: 1 approved orders
+2026-02-27 13:31:34,953 [INFO] __main__: Risk approved: BUY 0x26db7bd607... $1,330
+2026-02-27 13:31:34,954 [INFO] paper_trader: FILLED: 0x26db7bd6... YES 2683.99 tokens @ 0.4957
+2026-02-27 13:31:34,959 [INFO] portfolio_state: Portfolio state saved: balance=72582.59, positions=4
+2026-02-27 13:31:34,959 [INFO] __main__: Portfolio after trades:
+2026-02-27 13:31:35,962 [INFO] __main__: Simulating market moves...
+2026-02-27 13:31:35,964 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 13:31:35,964 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 13:31:35,964 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 13:31:35,964 [INFO] paper_trader: 0x26db7bd6... PnL: $-122.64 (price 0.4500)
+2026-02-27 13:31:38,781 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:31:38,783 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:31:42,505 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:31:42,506 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:41:26,928 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 13:41:26,929 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 13:41:26,929 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 13:41:26,929 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 13:41:28,291 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 13:41:28,292 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 13:41:28,307 [INFO] portfolio_state: Portfolio state loaded: balance=72582.59, positions=4
+2026-02-27 13:41:28,307 [INFO] __main__: Restored portfolio: balance=72582.59, positions=4
+2026-02-27 13:41:28,323 [INFO] paper_trader: CLOSED 0x26db7bd6 (SL): 2683.99 tokens @ 0.4957 -> 0.0000, PnL $-1330.40
+2026-02-27 13:41:28,323 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 13:41:28,324 [INFO] __main__: SL cooldown 20 runs for: ['0x26db7bd607']
+2026-02-27 13:41:28,324 [INFO] __main__: SL: closed 0x26db7bd607, PnL $-1330.40
+2026-02-27 13:41:28,325 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 13:41:28,325 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 13:41:28,489 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 13:41:28,490 [INFO] __main__: Generated 0 signals
+2026-02-27 13:41:28,491 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 13:41:28,492 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 13:41:28,492 [INFO] __main__: Portfolio after trades:
+2026-02-27 13:41:29,508 [INFO] __main__: Simulating market moves...
+2026-02-27 13:41:29,508 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 13:41:29,508 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 13:41:29,508 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 13:41:30,844 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:41:30,847 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:41:33,338 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:41:33,343 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 13:51:26,927 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 13:51:26,928 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 13:51:26,928 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 13:51:26,928 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 13:51:28,350 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 13:51:28,350 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 13:51:28,363 [INFO] portfolio_state: Portfolio state loaded: balance=72582.62, positions=3
+2026-02-27 13:51:28,363 [INFO] __main__: Restored portfolio: balance=72582.62, positions=3
+2026-02-27 13:51:28,388 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 13:51:28,388 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 13:51:28,389 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 13:51:28,556 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 13:51:28,557 [INFO] __main__: Generated 0 signals
+2026-02-27 13:51:28,557 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 13:51:28,558 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 13:51:28,558 [INFO] __main__: Portfolio after trades:
+2026-02-27 13:51:29,570 [INFO] __main__: Simulating market moves...
+2026-02-27 13:51:29,571 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 13:51:29,571 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 13:51:29,571 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 13:51:30,911 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 13:51:30,914 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 14:01:26,993 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 14:01:26,994 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 14:01:26,994 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 14:01:26,994 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 14:01:28,417 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 14:01:28,418 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 14:01:28,419 [INFO] portfolio_state: Portfolio state loaded: balance=72582.62, positions=3
+2026-02-27 14:01:28,419 [INFO] __main__: Restored portfolio: balance=72582.62, positions=3
+2026-02-27 14:01:28,433 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:01:28,433 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 14:01:28,433 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 14:01:28,602 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 14:01:28,603 [INFO] __main__: Generated 0 signals
+2026-02-27 14:01:28,603 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 14:01:28,604 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:01:28,604 [INFO] __main__: Portfolio after trades:
+2026-02-27 14:01:29,615 [INFO] __main__: Simulating market moves...
+2026-02-27 14:01:29,616 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 14:01:29,616 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 14:01:29,617 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 14:01:30,926 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 14:01:30,927 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 14:11:27,014 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 14:11:27,015 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 14:11:27,015 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 14:11:27,015 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 14:11:28,423 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 14:11:28,424 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 14:11:28,428 [INFO] portfolio_state: Portfolio state loaded: balance=72582.62, positions=3
+2026-02-27 14:11:28,428 [INFO] __main__: Restored portfolio: balance=72582.62, positions=3
+2026-02-27 14:11:28,447 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:11:28,447 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 14:11:28,447 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 14:11:28,612 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 14:11:28,613 [INFO] __main__: Generated 0 signals
+2026-02-27 14:11:28,613 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 14:11:28,614 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:11:28,615 [INFO] __main__: Portfolio after trades:
+2026-02-27 14:11:29,628 [INFO] __main__: Simulating market moves...
+2026-02-27 14:11:29,629 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 14:11:29,630 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 14:11:29,630 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 14:11:31,023 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 14:11:31,026 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 14:21:26,984 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 14:21:26,985 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 14:21:26,985 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 14:21:26,985 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 14:21:28,302 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 14:21:28,302 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 14:21:28,304 [INFO] portfolio_state: Portfolio state loaded: balance=72582.62, positions=3
+2026-02-27 14:21:28,304 [INFO] __main__: Restored portfolio: balance=72582.62, positions=3
+2026-02-27 14:21:28,322 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:21:28,322 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 14:21:28,323 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 14:21:28,487 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 14:21:28,488 [INFO] __main__: Generated 0 signals
+2026-02-27 14:21:28,488 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 14:21:28,489 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:21:28,490 [INFO] __main__: Portfolio after trades:
+2026-02-27 14:21:29,505 [INFO] __main__: Simulating market moves...
+2026-02-27 14:21:29,505 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 14:21:29,506 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 14:21:29,506 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 14:21:30,845 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 14:21:30,848 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 14:31:27,106 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 14:31:27,107 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 14:31:27,108 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 14:31:27,108 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 14:31:28,477 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 14:31:28,478 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 14:31:28,481 [INFO] portfolio_state: Portfolio state loaded: balance=72582.62, positions=3
+2026-02-27 14:31:28,481 [INFO] __main__: Restored portfolio: balance=72582.62, positions=3
+2026-02-27 14:31:28,500 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:31:28,500 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 14:31:28,501 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 14:31:28,665 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 14:31:28,666 [INFO] __main__: Generated 0 signals
+2026-02-27 14:31:28,666 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 14:31:28,667 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:31:28,667 [INFO] __main__: Portfolio after trades:
+2026-02-27 14:31:29,672 [INFO] __main__: Simulating market moves...
+2026-02-27 14:31:29,673 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 14:31:29,673 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 14:31:29,674 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 14:31:31,008 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 14:31:31,011 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 14:41:27,036 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 14:41:27,037 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 14:41:27,037 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 14:41:27,037 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 14:41:28,433 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 14:41:28,434 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 14:41:28,436 [INFO] portfolio_state: Portfolio state loaded: balance=72582.62, positions=3
+2026-02-27 14:41:28,437 [INFO] __main__: Restored portfolio: balance=72582.62, positions=3
+2026-02-27 14:41:28,460 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:41:28,461 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 14:41:28,461 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 14:41:28,626 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 14:41:28,628 [INFO] __main__: Generated 0 signals
+2026-02-27 14:41:28,628 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 14:41:28,629 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3
+2026-02-27 14:41:28,629 [INFO] __main__: Portfolio after trades:
+2026-02-27 14:41:29,635 [INFO] __main__: Simulating market moves...
+2026-02-27 14:41:29,636 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 14:41:29,637 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 14:41:29,637 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 14:41:31,016 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 14:41:31,019 [INFO] telegram_notify: Telegram: сообщение отправлено
+2026-02-27 14:51:28,835 [INFO] __main__: Log file: c:\Dev\Clawbot\clawbot-polymarket-agent\clawbot_run.log
+2026-02-27 14:51:28,836 [INFO] __main__: ClawBot v1.1: FULL SIMULATION (Paper Trading)
+2026-02-27 14:51:28,836 [INFO] __main__: CWD: c:\Dev\Clawbot\clawbot-polymarket-agent | .env from: c:\Dev\Clawbot\clawbot-polymarket-agent\.env
+2026-02-27 14:51:28,836 [INFO] __main__: TELEGRAM_TOKEN set: True | TELEGRAM_CHAT_ID set: True
+2026-02-27 14:51:30,257 [INFO] datafeed: Fetched 7 politics markets
+2026-02-27 14:51:30,257 [INFO] __main__: Fetched 7 markets, top 7 candidates
+2026-02-27 14:51:30,259 [INFO] portfolio_state: Portfolio state loaded: balance=72582.62, positions=3, realized_pnl=0.00
+2026-02-27 14:51:30,260 [INFO] __main__: Restored portfolio: balance=72582.62, positions=3, realized_pnl=0.00
+2026-02-27 14:51:30,276 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3, realized_pnl=0.00
+2026-02-27 14:51:30,277 [INFO] __main__: Excluded 3 held + 3 SL + 0 TP cooldown, candidates left: 2
+2026-02-27 14:51:30,277 [INFO] __main__: Excluded 2 markets with YES >= 0.90 (отработанные), candidates left: 0
+2026-02-27 14:51:30,471 [INFO] strategy: LLM: 0 candidates, skip API and return []
+2026-02-27 14:51:30,473 [INFO] __main__: Generated 0 signals
+2026-02-27 14:51:30,473 [INFO] __main__: Blocks 1-3: 0 approved orders
+2026-02-27 14:51:30,474 [INFO] portfolio_state: Portfolio state saved: balance=72582.62, positions=3, realized_pnl=0.00
+2026-02-27 14:51:30,474 [INFO] __main__: Portfolio after trades:
+2026-02-27 14:51:31,477 [INFO] __main__: Simulating market moves...
+2026-02-27 14:51:31,478 [INFO] paper_trader: 0x080a58fb... PnL: $-186.18 (price 0.4500)
+2026-02-27 14:51:31,479 [INFO] paper_trader: 0x10ee8590... PnL: $-164.63 (price 0.4500)
+2026-02-27 14:51:31,479 [INFO] paper_trader: 0xabcdef12... PnL: $164.26 (price 0.4500)
+2026-02-27 14:51:34,560 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8601615067:AAFO9lCQsqW4UBb6m7ohOwYyzI1kFTK6S2s/sendMessage "HTTP/1.1 200 OK"
+2026-02-27 14:51:34,563 [INFO] telegram_notify: Telegram: сообщение отправлено
