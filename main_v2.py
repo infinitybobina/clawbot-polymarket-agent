@@ -9,6 +9,7 @@ import logging
 import os
 import sys
 import time
+from datetime import datetime, timezone
 
 _root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _root)
@@ -27,13 +28,14 @@ from config import (
     MARKET_CATEGORIES,
     ACTIVE_CATEGORIES,
 )
-from datafeed import ClawBotDataFeed
+from datafeed import ClawBotDataFeed, has_live_orderbook_for_market
 from strategy import ClawBotStrategy
 from riskmanager import RiskManager
 from price_stream import PriceStream
 from portfolio_state import load_state, save_state
 from paper_trader import PaperTrader
 from position_prices import get_position_prices_by_market
+from trade_logger import log_trade_open, log_trade_close
 from sl_cooldown import (
     load_cooldown,
     save_cooldown,
@@ -44,6 +46,12 @@ from sl_cooldown import (
     save_tp_cooldown,
     DEFAULT_RUNS,
     DEFAULT_TP_RUNS,
+)
+from experiment_logger import (
+    ExperimentLogger,
+    avg_spread_from_candidates,
+    median_tte_sec_from_candidates,
+    median_clob_vol_from_candidates,
 )
 
 try:
@@ -77,6 +85,16 @@ def _market_category(market_id: str, datafeed: ClawBotDataFeed) -> str:
     api_cat = (datafeed.markets[market_id].category or "").strip().lower()
     return API_CATEGORY_TO_INTERNAL.get(api_cat, api_cat or "politics")
 
+
+def _order_has_book(order: dict, datafeed: ClawBotDataFeed) -> bool:
+    """Есть ли книга (yes_bid/yes_ask) для входа — не открываем позицию без стакана."""
+    mid = order.get("market_id")
+    if not mid or mid not in datafeed.markets:
+        return False
+    m = datafeed.markets[mid]
+    return getattr(m, "yes_bid", None) is not None and getattr(m, "yes_ask", None) is not None
+
+
 _log_file = os.path.join(_root, "clawbot_v2_run.log")
 # Файл с построчной записью (buffering=1), чтобы изменения сразу видны в редакторе
 _log_file_stream = open(_log_file, mode="a", encoding="utf-8", buffering=1)
@@ -93,16 +111,21 @@ logger.info("Log file: %s", _log_file)
 
 
 def check_stops(trader, prices: dict, cfg: dict) -> list:
-    """По текущим ценам из stream: вернуть список {market_id, sell_price, reason} для закрытия."""
+    """По текущим ценам из stream: вернуть список {market_id, sell_price, reason} для закрытия. Нет цены (no orderbook) → позицию не трогаем."""
     to_close = []
     sl_pct = cfg.get("sl_pct", 0.04)
     tp_pct = cfg.get("tp_pct", 0.18)
+    skipped_no_price = False
     for mid, pos in list(trader.positions.items()):
         avg_price = float(pos.get("avg_price", 0))
         if avg_price <= 0:
             continue
         info = prices.get(mid, {})
-        current_price = float(info.get("yes_price", 0))
+        current_price = info.get("yes_price")
+        if current_price is None:
+            skipped_no_price = True
+            continue
+        current_price = float(current_price)
         if current_price <= 0:
             continue
         sl = pos.get("stop_loss_price")
@@ -113,9 +136,11 @@ def check_stops(trader, prices: dict, cfg: dict) -> list:
         else:
             sl, tp = float(sl), float(tp)
         if current_price <= sl:
-            to_close.append({"market_id": mid, "sell_price": current_price, "reason": "SL"})
+            to_close.append({"market_id": mid, "sell_price": current_price, "reason": "SL", "trade_id": pos.get("trade_id")})
         elif current_price >= tp:
-            to_close.append({"market_id": mid, "sell_price": current_price, "reason": "TP"})
+            to_close.append({"market_id": mid, "sell_price": current_price, "reason": "TP", "trade_id": pos.get("trade_id")})
+    if skipped_no_price:
+        logger.info("No price (no orderbook) -> skip SL/TP this tick")
     return to_close
 
 
@@ -124,7 +149,14 @@ async def main_loop() -> None:
     level_name = cfg.get("log_level", "INFO").upper()
     logging.getLogger().setLevel(getattr(logging, level_name, logging.INFO))
     mode = (cfg.get("trading_mode") or "paper").strip().lower()
-    logger.info("ClawBot v2.0: 60s loop, price stream, LLM every 5 min [%s]", mode.upper())
+    if mode not in ("paper", "live"):
+        raise ValueError(f"Unknown trading_mode={mode!r}")
+    if mode == "live":
+        raise RuntimeError(
+            "LIVE trading mode is not implemented and is disabled for safety. "
+            "Use trading_mode='paper' for now."
+        )
+    logger.info("ClawBot v2.0: PAPER MODE ONLY (no real orders will be sent).")
 
     saved_balance, saved_positions, cumulative_realized_pnl = load_state(_root)
     trader = get_trader(cfg)
@@ -134,6 +166,8 @@ async def main_loop() -> None:
         logger.info("Restored portfolio: balance=%.2f, positions=%d", trader.balance, len(trader.positions))
     sl_cooldown = load_cooldown(_root)
     tp_cooldown = load_tp_cooldown(_root)
+    no_price_streak = {}  # mid -> consecutive ticks without price (для агрегата раз в минуту)
+    last_no_price_agg_time = 0.0
 
     stream = PriceStream()
     loop_sec = LOOP_INTERVAL_SEC
@@ -141,6 +175,12 @@ async def main_loop() -> None:
     telegram_sec = TELEGRAM_INTERVAL_SEC
     price_interval = PRICE_STREAM_INTERVAL_SEC
     elapsed = 0
+    tick_count = 0
+    PORTFOLIO_SUMMARY_EVERY_TICKS = 5  # сводка портфеля в лог раз в N тиков
+
+    profile_15m = cfg.get("strategy_profile_15m", "15m_conservative")
+    exp_logger = ExperimentLogger(profile_15m, _root)
+    logger.info("Experiment profile: %s", profile_15m)
 
     async with ClawBotDataFeed() as datafeed:
         category = cfg.get("markets_category", "both")
@@ -154,6 +194,7 @@ async def main_loop() -> None:
                         min_volume_usd=cfg.get("crypto_min_volume", 50_000),
                         min_liquidity_usd=cfg.get("crypto_min_liquidity", 0),
                         max_hours_to_resolution=cfg.get("crypto_resolution_hours_max", 12),
+                        skip_rebuild_and_enrich=True,
                     )
                     all_markets.extend(markets_c)
                 else:
@@ -162,11 +203,16 @@ async def main_loop() -> None:
                     markets_cat = await datafeed.fetch_category_markets(
                         params.get("gamma_category", cat),
                         min_volume_usd=min_vol,
+                        skip_rebuild_and_enrich=True,
                     )
                     all_markets.extend(markets_cat)
-            # Только активные категории: заменить пул, не смешивать со sports/culture
+            if not all_markets:
+                return datafeed.markets
             datafeed.markets.clear()
             datafeed.markets.update({m.market_id: m for m in all_markets})
+            datafeed.clob_state.rebuild_from_snapshots(list(datafeed.markets.values()))
+            enriched = await datafeed.enrich_snapshots_with_clob(list(datafeed.markets.values()))
+            datafeed.markets.update({m.market_id: m for m in enriched})
             return datafeed.markets
 
         if category == "both" and active:
@@ -212,8 +258,10 @@ async def main_loop() -> None:
 
         try:
             while True:
+                tick_count += 1
                 prices = stream.snapshot()
-                # CLOB book: цены по открытым позициям каждые 10s (mid = (bid+ask)/2)
+
+                # CLOB book: цены по открытым позициям
                 if trader.positions:
                     token_ids_by_market = {}
                     for mid, pos in trader.positions.items():
@@ -226,14 +274,38 @@ async def main_loop() -> None:
                             token_ids_by_market[mid] = tid
                     if token_ids_by_market:
                         pos_prices = await get_position_prices_by_market(
-                            list(trader.positions.keys()), token_ids_by_market
+                            list(trader.positions.keys()), token_ids_by_market, session=datafeed.session, clob_state=datafeed.clob_state
                         )
                         for mid, p in pos_prices.items():
-                            prices[mid] = {"yes_price": p, "timestamp": time.time()}
+                            prices[mid] = {"yes_price": p, "timestamp": time.time()}  # p can be None → skip SL/TP
+                    # Счётчик тиков подряд без цены по всем позициям; раз в минуту — агрегат в лог
+                    for mid in trader.positions:
+                        if prices.get(mid, {}).get("yes_price") is None:
+                            no_price_streak[mid] = no_price_streak.get(mid, 0) + 1
+                        else:
+                            no_price_streak[mid] = 0
+                    now = time.time()
+                    if now - last_no_price_agg_time >= 60.0:
+                        last_no_price_agg_time = now
+                        with_streak = [(mid, n) for mid, n in no_price_streak.items() if n > 0]
+                        if with_streak:
+                            by_streak = {}
+                            for mid, n in with_streak:
+                                by_streak[n] = by_streak.get(n, []) + [mid[:12]]
+                            msg = " ".join(f"{n}+ticks={len(mids)}" for n, mids in sorted(by_streak.items(), reverse=True))
+                            logger.info("Position no-price streaks (ticks): %d positions without CLOB price: %s", len(with_streak), msg)
                 sl_cooldown = tick_cooldown(sl_cooldown)
                 save_cooldown(_root, sl_cooldown)
                 tp_cooldown = tick_cooldown(tp_cooldown)
                 save_tp_cooldown(_root, tp_cooldown)
+
+                if tick_count > 0 and tick_count % PORTFOLIO_SUMMARY_EVERY_TICKS == 0:
+                    mark_to_market = {mid: prices.get(mid, {}).get("yes_price") for mid in trader.positions}
+                    metrics = trader.get_portfolio_metrics(mark_to_market if all(v is not None for v in mark_to_market.values()) else None)
+                    logger.info(
+                        "Portfolio summary: balance=%.2f positions=%d realized_pnl=%.2f unrealized_pnl=%.2f",
+                        trader.balance, len(trader.positions), cumulative_realized_pnl, metrics.get("unrealized_pnl", 0),
+                    )
 
                 to_close = check_stops(trader, prices, cfg)
                 if to_close:
@@ -241,6 +313,16 @@ async def main_loop() -> None:
                     closed = close_result.get("closed", [])
                     for c in closed:
                         cumulative_realized_pnl += float(c.get("pnl_usd", 0))
+                        tid = c.get("trade_id")
+                        if tid is not None:
+                            size_usd = float(c.get("size_tokens", 0) or 0) * float(c.get("avg_price", 0) or 0)
+                            pnl_usd = float(c.get("pnl_usd", 0) or 0)
+                            pnl_pct = (pnl_usd / size_usd * 100) if size_usd else None
+                            log_trade_close(
+                                tid,
+                                {"exit_ts": None, "exit_price": c.get("sell_price"), "exit_reason": c.get("reason")},
+                                {"pnl_usd": pnl_usd, "pnl_pct": pnl_pct},
+                            )
                     save_state(_root, trader.balance, trader.positions, cumulative_realized_pnl)
                     sl_closed = [c["market_id"] for c in closed if c.get("reason") == "SL"]
                     tp_closed = [c["market_id"] for c in closed if c.get("reason") == "TP"]
@@ -251,7 +333,7 @@ async def main_loop() -> None:
                         tp_cooldown = add_to_cooldown(tp_cooldown, tp_closed, runs=cfg.get("tp_cooldown_runs", DEFAULT_TP_RUNS))
                         save_tp_cooldown(_root, tp_cooldown)
                     for c in closed:
-                        logger.info("%s closed %s PnL $%.2f", c.get("reason"), c["market_id"][:12], c.get("pnl_usd", 0))
+                        logger.info("PAPER CLOSE market=%s %s PnL $%.2f", c["market_id"][:12], c.get("level_msg", c.get("reason")), c.get("pnl_usd", 0))
                     if send_telegram_message:
                         pnl_sum = sum(c.get("pnl_usd", 0) for c in closed)
                         await send_telegram_message(f"ClawBot v2 Exit\nClosed {len(closed)} | PnL ${pnl_sum:,.2f}")
@@ -264,19 +346,63 @@ async def main_loop() -> None:
                     tp_cooldown_ids = get_cooldown_set(tp_cooldown)
                     exclude_ids = open_market_ids | sl_cooldown_ids | tp_cooldown_ids
                     logger.info("*** LLM SLOT STARTED exclude=%d ***", len(exclude_ids))
-                    candidates = datafeed.get_tradeable_top(
-                        cfg.get("n_markets", 25),
-                        cfg["max_entry_price"],
-                        cfg["min_entry_price"],
-                        exclude_ids,
+
+                    # Хардкод для гарантии (вместо cfg). min_yes=0.00001 — пусть 0.0000 войдут. Ждём движения цен → LLM заработает!
+                    min_yes_h = 0.00001
+                    max_entry_h = 0.9999
+                    logger.info("DEBUG HARDCODE: min_yes=%s max_entry=%s", min_yes_h, max_entry_h)
+                    # DEBUG categories: politics=X sports=Y culture=Z total=N
+                    cat_counts: dict = {}
+                    for mid in datafeed.markets:
+                        c = _market_category(mid, datafeed)
+                        cat_counts[c] = cat_counts.get(c, 0) + 1
+                    parts = " ".join(f"{k}={v}" for k, v in sorted(cat_counts.items()))
+                    logger.info("DEBUG categories: %s total=%d", parts, len(datafeed.markets))
+                    # LLM slot: состояние CLOB и отбор кандидатов (один источник истины — has_live_orderbook_for_market)
+                    logger.info("LLM slot: CLOB state (datafeed) — next line")
+                    _markets_with_live_book = sum(
+                        1 for mid in datafeed.markets
+                        if has_live_orderbook_for_market(mid, datafeed.clob_state)
                     )
+                    logger.info(
+                        "CLOB state (datafeed): markets_with_live_book=%d total=%d",
+                        _markets_with_live_book, len(datafeed.markets),
+                    )
+                    candidates = datafeed.get_tradeable_top(25, max_entry_h, min_yes_h, exclude_ids)
+                    binary_count = len(candidates)
+                    # Отладка: по первому кандидату — что в snapshot vs что в clob_state
+                    if binary_count > 0:
+                        c0 = candidates[0]
+                        mid0 = getattr(c0, "market_id", None) or ""
+                        token_ids = getattr(datafeed.clob_state, "market_tokens", None) and datafeed.clob_state.market_tokens.get(mid0)
+                        first_tid = token_ids[0] if token_ids else None
+                        st0 = (getattr(datafeed.clob_state, "tokens", None) or {}).get(first_tid) if first_tid else None
+                        logger.info(
+                            "LLM CLOB debug: market_id=%s yes_bid=%s yes_ask=%s | clob_state: token_ids_len=%s first_token_has_bid=%s first_token_has_ask=%s",
+                            mid0[:20] + ".." if len(mid0) > 20 else mid0,
+                            getattr(c0, "yes_bid", None),
+                            getattr(c0, "yes_ask", None),
+                            len(token_ids) if token_ids else 0,
+                            getattr(st0, "has_bid", None) if st0 else None,
+                            getattr(st0, "has_ask", None) if st0 else None,
+                        )
+                    # Строгий фильтр: только has_live_orderbook_for_market (тот же источник, что и лог CLOB state)
+                    candidates = [c for c in candidates if has_live_orderbook_for_market(c.market_id, datafeed.clob_state)]
+                    rejected = binary_count - len(candidates)
+                    logger.info(
+                        "LLM candidates: after CLOB filter FINAL=%d (rejected missing_bid+ask=%d from %d)",
+                        len(candidates), rejected, binary_count,
+                    )
+                    if rejected > 0:
+                        logger.info("Rejects missing_bid+ask=%d from %d markets, FINAL candidates %d", rejected, binary_count, len(candidates))
 
                     if len(candidates) == 0:
                         logger.warning("0 candidates — skip LLM")
                     else:
-                        diag = datafeed.tradeable_diagnostic(
-                            cfg["max_entry_price"], cfg["min_entry_price"], exclude_ids
-                        )
+                        pnl_before_interval = cumulative_realized_pnl
+                        # Опционально: LLM-батч через llm_adapter.build_llm_batch_payload(candidates, portfolio, mode="15M_CRYPTO_BATCH")
+                        # -> запрос к модели -> llm_adapter.llm_decisions_to_orders(decisions_json, datafeed, portfolio) -> approved_orders
+                        diag = datafeed.tradeable_diagnostic(max_entry_h, min_yes_h, exclude_ids)
                         logger.info(
                             "LLM: binary %d | диапазон: %d → top %d",
                             diag["binary_total"], diag["in_yes_range"], len(candidates),
@@ -317,6 +443,9 @@ async def main_loop() -> None:
                                 logger.warning("Risk rejected signal %d: %s", i + 1, reason)
                         pct_vol = cfg.get("max_trade_pct_of_volume", 0.05)
                         pct_depth = cfg.get("max_trade_pct_of_depth", 0.10)
+                        approved_orders = [o for o in approved_orders if _order_has_book(o, datafeed)]
+                        if len(risk_result["approved_orders"]) != len(approved_orders):
+                            logger.info("Dropped %d orders (no yes_bid/yes_ask); executing %d", len(risk_result["approved_orders"]) - len(approved_orders), len(approved_orders))
                         for order in approved_orders:
                             mid = order.get("market_id")
                             if not mid or mid not in datafeed.markets:
@@ -345,6 +474,37 @@ async def main_loop() -> None:
                                     order["yes_token_id"] = cids[0]
                         if approved_orders:
                             execution_result = trader.execute_orders(approved_orders)
+                            orders_by_mid = {o["market_id"]: o for o in approved_orders if o.get("market_id")}
+                            for ex in execution_result.get("executions", []):
+                                mid = ex.get("market_id")
+                                if not mid or mid not in trader.positions:
+                                    continue
+                                pos = trader.positions[mid]
+                                order = orders_by_mid.get(mid, {})
+                                snap = datafeed.markets.get(mid)
+                                yes_tid = (snap.clob_token_ids[0] if (snap and getattr(snap, "clob_token_ids", None) and len(snap.clob_token_ids) >= 1) else None) or pos.get("yes_token_id")
+                                book_ok_at_entry = getattr(snap, "yes_bid", None) is not None if snap else False
+                                logger.info(
+                                    "Position opened: market_id=%s conditionId=%s yes_token_id=%s book_ok_at_entry=%s",
+                                    mid[:16] + ".." if len(mid) > 16 else mid,
+                                    (mid[:16] + ".." if len(mid) > 16 else mid),
+                                    (yes_tid[:16] + ".." if yes_tid and len(str(yes_tid)) > 16 else (yes_tid or "")),
+                                    book_ok_at_entry,
+                                )
+                                position_state = dict(pos, market_id=mid, final_size_usd=ex.get("cost_usd"))
+                                llm_decision = dict(order, limit_price=order.get("limit_price") or ex.get("fill_price"))
+                                market_diag = {
+                                    "condition_id": mid,
+                                    "category": _market_category(mid, datafeed),
+                                    "yes_bid": getattr(snap, "yes_bid", None) if snap else None,
+                                    "yes_ask": getattr(snap, "yes_ask", None) if snap else None,
+                                    "spread": getattr(snap, "spread", None) if snap else None,
+                                    "book_ok_at_entry": book_ok_at_entry,
+                                    "yes_token_id": yes_tid,
+                                }
+                                trade_id = log_trade_open(position_state, llm_decision, market_diag, strategy_id=profile_15m)
+                                if trade_id is not None:
+                                    trader.positions[mid]["trade_id"] = trade_id
                             save_state(_root, trader.balance, trader.positions, cumulative_realized_pnl)
                             logger.info("LLM slot: %d approved, executed", len(approved_orders))
                             if send_telegram_message:
@@ -367,6 +527,26 @@ async def main_loop() -> None:
                         else:
                             logger.info("LLM slot: %d signals, 0 approved", len(signals))
 
+                        n_decisions = len(signals)
+                        n_trades_slot = len(approved_orders) if approved_orders else 0
+                        sizes = [float(o.get("final_size_usd") or o.get("target_size_usd") or 0) for o in approved_orders] if approved_orders else []
+                        avg_size_slot = (sum(sizes) / len(sizes)) if sizes else 0.0
+                        exp_logger.log_interval(
+                            timestamp=datetime.now(timezone.utc).isoformat(),
+                            n_markets=len(candidates),
+                            n_decisions=n_decisions,
+                            n_trades=n_trades_slot,
+                            n_skipped=max(0, n_decisions - n_trades_slot),
+                            avg_spread=avg_spread_from_candidates(candidates),
+                            median_tte_sec=median_tte_sec_from_candidates(candidates),
+                            avg_size=avg_size_slot if avg_size_slot > 0 else None,
+                            pnl_interval=cumulative_realized_pnl - pnl_before_interval,
+                            median_clob_vol_24h=median_clob_vol_from_candidates(candidates),
+                            cumulative_pnl_after=cumulative_realized_pnl,
+                        )
+                        if approved_orders:
+                            exp_logger.add_markets_traded([o.get("market_id") for o in approved_orders if o.get("market_id")])
+
                 if elapsed > 0 and elapsed % telegram_sec == 0:
                     if send_telegram_message:
                         total_val = trader.balance + sum(
@@ -382,6 +562,8 @@ async def main_loop() -> None:
                 elapsed += loop_sec
         finally:
             await stream.stop()
+            strategy_params = cfg.get("strategy_params_15m_conservative") if profile_15m == "15m_conservative" else cfg.get("strategy_params_15m_aggressive")
+            exp_logger.finish_session(trader, cumulative_realized_pnl, strategy_params=strategy_params)
             logger.info("PriceStream stopped")
 
 

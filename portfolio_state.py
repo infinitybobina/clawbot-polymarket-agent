@@ -61,6 +61,10 @@ def save_state(
                 rec["stop_loss_price"] = round(float(p["stop_loss_price"]), 4)
             if p.get("take_profit_price") is not None:
                 rec["take_profit_price"] = round(float(p["take_profit_price"]), 4)
+            if p.get("yes_token_id"):
+                rec["yes_token_id"] = str(p["yes_token_id"])
+            if p.get("trade_id") is not None:
+                rec["trade_id"] = int(p["trade_id"])
             out["positions"][mid] = rec
         with open(path, "w", encoding="utf-8") as f:
             json.dump(out, f, indent=2, ensure_ascii=False)

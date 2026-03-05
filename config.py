@@ -45,8 +45,33 @@ MARKET_CATEGORIES = {
         "gamma_category": "economy",
     },
 }
-# Какие категории торгуем. DEBUG: только politics
-ACTIVE_CATEGORIES = ["politics"]
+# Какие категории торгуем (на один запуск: все, чтобы N>0 после Gamma filter)
+ACTIVE_CATEGORIES = ["politics", "sports", "culture", "crypto", "economy"]
+
+# --- Профили стратегии 15M (эксперименты: консервативный / агрессивный) ---
+STRATEGY_PROFILE_15M = "15m_conservative"
+
+strategy_params_15m_conservative = {
+    "max_spread": 0.04,
+    "min_yes_price": 0.10,
+    "max_yes_price": 0.90,
+    "min_clob_volume_24h": 2000.0,
+    "min_best_level_size": 100.0,
+    "min_edge": 0.05,
+    "min_time_to_expiry_sec": 240,
+    "max_time_to_expiry_sec": 780,
+}
+
+strategy_params_15m_aggressive = {
+    "max_spread": 0.08,
+    "min_yes_price": 0.03,
+    "max_yes_price": 0.97,
+    "min_clob_volume_24h": 500.0,
+    "min_best_level_size": 30.0,
+    "min_edge": 0.02,
+    "min_time_to_expiry_sec": 180,
+    "max_time_to_expiry_sec": 900,
+}
 
 PROD_CONFIG = {
     "n_markets": 25,            # кандидатов для стратегии; макс. позиций ~25 при текущей экспозиции
@@ -80,7 +105,13 @@ PROD_CONFIG = {
     "log_level": "INFO",
     # Режим торговли: "paper" — симуляция; переключается на "live" для реала (см. PRODUCTION_READY.md)
     "trading_mode": "paper",
+    # Профиль 15M для экспериментов: "15m_conservative" | "15m_aggressive" (см. strategy_params_15m_* ниже)
+    "strategy_profile_15m": STRATEGY_PROFILE_15M,
 }
+
+# Профили стратегии 15M (подставляются в payload.strategy_params для LLM)
+PROD_CONFIG["strategy_params_15m_conservative"] = strategy_params_15m_conservative
+PROD_CONFIG["strategy_params_15m_aggressive"] = strategy_params_15m_aggressive
 
 # v2.0: интервалы (main_v2.py)
 LOOP_INTERVAL_SEC = 60       # основной цикл: каждые 60 сек

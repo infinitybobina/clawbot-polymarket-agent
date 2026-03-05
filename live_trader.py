@@ -17,7 +17,9 @@ _PROD_READY_MSG = (
 
 
 class LiveTrader:
-    """Трейдер с реальным исполнением на Polymarket CLOB. Пока заглушка: конструктор и balance/positions есть, execute/close — NotImplemented."""
+    """Трейдер с реальным исполнением на Polymarket CLOB.
+    Класс-заглушка; любые попытки вызвать методы исполнения должны приводить к NotImplementedError
+    до момента отдельного, явного релиза live-версии."""
 
     def __init__(self, cfg: dict):
         initial = float(cfg.get("initial_balance", 100_000))

@@ -132,8 +132,18 @@ class PaperTrader:
                 "reason": reason,
             })
             del self.positions[market_id]
-            closed.append({"market_id": market_id, "pnl_usd": round(pnl, 2), "proceeds": round(proceeds, 2), "reason": reason})
-            logger.info("CLOSED %s (%s): %.2f tokens @ %.4f -> %.4f, PnL $%.2f", market_id[:10], reason, tokens, avg_price, sell_price, pnl)
+            level_msg = reason
+            if reason == "TP" and pos.get("take_profit_price") is not None:
+                level_msg = "via TP @%.2f (>=%.2f)" % (sell_price, float(pos["take_profit_price"]))
+            elif reason == "SL" and pos.get("stop_loss_price") is not None:
+                level_msg = "via SL @%.2f (<=%.2f)" % (sell_price, float(pos["stop_loss_price"]))
+            closed.append({
+                "market_id": market_id, "pnl_usd": round(pnl, 2), "proceeds": round(proceeds, 2),
+                "reason": reason, "level_msg": level_msg,
+                "trade_id": pos.get("trade_id"),
+                "sell_price": sell_price, "avg_price": avg_price, "size_tokens": tokens,
+            })
+            logger.info("CLOSED %s (%s): %.2f tokens @ %.4f -> %.4f, PnL $%.2f", market_id[:10], level_msg, tokens, avg_price, sell_price, pnl)
         return {"closed": closed, "portfolio": self.get_portfolio_metrics()}
 
     def simulate_market_move(self, market_id: str, new_price: float) -> None:

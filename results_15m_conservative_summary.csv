@@ -1,0 +1,2 @@
+profile,n_intervals,n_calls,n_trades,n_markets_traded,winrate,avg_pnl_trade,total_pnl,max_dd,avg_spread,median_clob_vol_24h
+15m_conservative,0,0,0,0,0.0,0.0,34448.36,0.0,0.0,0.0
