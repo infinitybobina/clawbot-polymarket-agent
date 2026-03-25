@@ -1,0 +1,10 @@
+aiohttp>=3.9.0
+python-dotenv>=1.0.0
+openai>=1.0.0
+python-telegram-bot>=21.0
+
+# Trades DB (бот: запись сделок)
+psycopg2-binary>=2.9.0
+
+# Analytics (ноутбуки, check_closed_trades.py)
+asyncpg>=0.29.0

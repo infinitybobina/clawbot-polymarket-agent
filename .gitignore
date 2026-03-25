@@ -1,0 +1,54 @@
+# Секреты и окружение
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Виртуальное окружение
+.venv/
+venv/
+ENV/
+
+# Логи и данные агента (локальные)
+clawbot_run.log
+clawbot_v2_run.log
+clawbot_v2_run.log.*
+*.log
+results_*.csv
+results_*.json
+sl_cooldown.json
+tp_cooldown.json
+portfolio_state.json
+bot_session.json
+
+# IDE / редактор
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
