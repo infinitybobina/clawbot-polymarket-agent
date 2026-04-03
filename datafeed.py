@@ -957,13 +957,15 @@ class ClawBotDataFeed:
     """Одна долгоживущая сессия: переиспользуется во всех fetch/enrich, закрывается только при остановке бота.
     Иначе при пачке параллельных CLOB-запросов закрытие сессии убивает коннектор и остальные падают с 'connector closed'.
     """
-    def __init__(self):
+    def __init__(self, gamma_timeout_sec: float = 60.0, gamma_retries: int = 5):
         self.session: Optional[aiohttp.ClientSession] = None
         self._connector: Optional[aiohttp.TCPConnector] = None
         self.markets: Dict[str, MarketSnapshot] = {}
         self.gamma_base = "https://gamma-api.polymarket.com"
         self.clob_state = ClobState()
         self._shutting_down = False
+        self._gamma_timeout_sec = max(10.0, float(gamma_timeout_sec))
+        self._gamma_retries = max(1, int(gamma_retries))
 
     async def __aenter__(self):
         # Один коннектор, нигде не шарим — иначе при закрытии другой сессии с connector_owner=True закроет и его
@@ -997,14 +999,24 @@ class ClawBotDataFeed:
         self._connector = aiohttp.TCPConnector(limit=40, limit_per_host=20)
         self.session = aiohttp.ClientSession(connector=self._connector)
 
-    async def _gamma_get_json(self, url: str, *, retries: int = 3, timeout_sec: float = 20.0) -> Optional[Any]:
+    async def _gamma_get_json(
+        self,
+        url: str,
+        *,
+        retries: Optional[int] = None,
+        timeout_sec: Optional[float] = None,
+    ) -> Optional[Any]:
         """GET JSON from Gamma with retries; never raises."""
         if not self.session:
             return None
+        retries = self._gamma_retries if retries is None else int(retries)
+        timeout_sec = self._gamma_timeout_sec if timeout_sec is None else float(timeout_sec)
         last_err: Optional[BaseException] = None
         for attempt in range(retries + 1):
             try:
-                timeout = aiohttp.ClientTimeout(total=timeout_sec)
+                # connect отдельно: медленный DNS/SSL не съедает весь total на установку соединения
+                connect_t = min(30.0, max(10.0, timeout_sec * 0.35))
+                timeout = aiohttp.ClientTimeout(total=timeout_sec, connect=connect_t)
                 async with self.session.get(url, timeout=timeout, headers={"Accept": "application/json"}) as resp:
                     if resp.status != 200:
                         # Retry on 5xx / 429, otherwise treat as permanent.
@@ -1157,7 +1169,7 @@ class ClawBotDataFeed:
         cat_lower = (category or "politics").strip().lower()
         # Загрузка через /events: у каждого события есть tags[].slug (politics, sports, economy, culture, crypto)
         url = f"{self.gamma_base}/events?active=true&closed=false&limit=200"
-        data = await self._gamma_get_json(url, retries=3)
+        data = await self._gamma_get_json(url)
         if data is None:
             logger.warning("Gamma events fetch failed for category=%s; returning 0 markets this tick", cat_lower)
             return []
@@ -1296,7 +1308,7 @@ class ClawBotDataFeed:
         """Рынки Crypto с фильтром по времени до экспирации (1h), объёму и ликвидности.
         Чтобы наша заявка не двигала рынок: дальше в main размер ограничивают по объёму/глубине."""
         url = f"{self.gamma_base}/markets?active=true&closed=false&category=crypto&limit={limit}"
-        data = await self._gamma_get_json(url, retries=3)
+        data = await self._gamma_get_json(url)
         if data is None:
             logger.warning("Gamma crypto markets fetch failed; returning 0 markets this tick")
             return []

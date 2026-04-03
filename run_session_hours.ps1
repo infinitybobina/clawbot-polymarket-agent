@@ -22,9 +22,10 @@ Write-Host ""
 
 while ((Get-Date) -lt $deadline) {
     Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Starting: python main_v2.py"
-    $p = Start-Process -FilePath "python" -ArgumentList "main_v2.py" -WorkingDirectory $scriptDir -PassThru -NoNewWindow
-    $p.WaitForExit()
-    $code = $p.ExitCode
+    # ВАЖНО (Windows): Start-Process -NoNewWindow НЕ прокидывает Ctrl+C в дочерний python.exe.
+    # Поэтому запускаем напрямую (в этом же консольном процессе), чтобы Ctrl+C работал безотказно.
+    & python "main_v2.py"
+    $code = $LASTEXITCODE
     Write-Host "[$(Get-Date -Format 'HH:mm:ss')] python exited with code $code"
     if ((Get-Date) -ge $deadline) {
         break

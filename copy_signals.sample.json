@@ -1,0 +1,10 @@
+{
+  "signals": [
+    {
+      "market_id": "0xYOUR_MARKET_ID",
+      "wallet": "0xLEADER_WALLET",
+      "weight": 1.0,
+      "max_entry_price": 0.50
+    }
+  ]
+}

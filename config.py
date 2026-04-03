@@ -93,6 +93,9 @@ strategy_params_15m_aggressive = {
 }
 
 PROD_CONFIG = {
+    # Gamma API: при медленной сети или перегрузке увеличить timeout / retries (меньше TimeoutError в логах).
+    "gamma_http_timeout_sec": 60.0,
+    "gamma_http_retries": 5,
     "n_markets": 80,            # кол-во market_id для price stream; пул кандидатов — до max_markets_to_enrich
     "max_markets_to_enrich": 180,  # боевой режим: шире вселенная рынков для статистики
     "enrich_yes_price_min": 0.10,  # для enrich брать только рынки с yes_price >= 0.10 (отсечь решённые 0.01)
@@ -100,7 +103,10 @@ PROD_CONFIG = {
     "fallback_yes_price_min": 0.10,  # fallback: Gamma yes_price в [0.10, 0.90] (как enrich pool)
     "fallback_yes_price_max": 0.90,  # 0.15/0.85 резало всех 17 кандидатов → расширено
     "min_yes_edge": 0.06,       # 6% глобальный минимум: меньше слабых входов, выше селективность
-    "min_ev_threshold": 0.06,  # EV >= 6% (LLM + риск); синхронно с промптом и category min_edge
+    "min_ev_threshold": 0.04,  # временно мягче для набора выборки: EV >= 4%
+    # Edge-gate: минимальный llm_score/expected_ev для входа (0..1).
+    # Временный системный фильтр: не брать слабые сигналы < 0.20.
+    "entry_min_llm_score": 0.10,
     "momentum_threshold": 0.02, # для бэктеста: допуск падения цены за час 2%
     "min_volume": 30_000,    # политика: мин. объём рынка $30k. После теста 500_000
     "risk_per_trade": 0.0035,  # 0.35% баланса на сделку (снижение риска на период диагностики)
@@ -119,7 +125,7 @@ PROD_CONFIG = {
     # Для боя вернуть, например, 12–18.
     "max_open_positions": 0,
     # Сколько НОВЫХ рынков (ещё не в портфеле) открыть за один LLM-слот — защита от «залпа» сигналов
-    "max_new_trades_per_llm_slot": 2,
+    "max_new_trades_per_llm_slot": 3,
     "initial_balance": 100_000,
     # SL/TP в долях от цены входа
     "sl_pct": 0.12,   # шире стоп: меньше выбивает шумом на best_bid
@@ -136,11 +142,18 @@ PROD_CONFIG = {
     # Минимальная просадка (доля от entry), чтобы считать позицию «в минусе» для тайм-стопа.
     # Пример 0.005 = -0.5% от entry. 0 = любой минус.
     "loser_time_stop_min_drawdown": 0.005,
+    # Жёсткий лимит удержания: закрыть позицию при возрасте >= N часов независимо от PnL.
+    # Нужен, чтобы не держать 12h+ в режиме деградации edge.
+    "hard_max_hold_hours": 12,
     "max_entry_price": MAX_ENTRY_PRICE,
     "min_entry_price": MIN_ENTRY_PRICE,  # рынки с YES < min считаем мёртвыми
     "min_reward_risk_ratio": 1.5,  # ослаблено: reward:risk ≥ 1.5:1
     "high_entry_ratio_exempt": 0.95,  # при entry >= 0.95 не требуем min_rr (TP у потолка 0.99)
     "sl_cooldown_runs": 180,       # ~180 минут при тике 60 с — не лезть обратно в рынок сразу после SL
+    # Усиленный cooldown после SL/TIME_STOP для кластерно-рисковых категорий (в тиках цикла).
+    # Нужен, чтобы не «перезаходить» в один и тот же politics/geopolitics рынок серией SL.
+    "sl_cooldown_runs_politics": 720,     # ~12 часов
+    "sl_cooldown_runs_geopolitics": 720,  # ~12 часов
     "tp_cooldown_runs": 5,         # после закрытия по TP не входить в этот рынок 5 запусков
     # Повторный вход в тот же рынок после успешного BUY (тики = минуты при LOOP 60 с)
     "reentry_cooldown_minutes": 240,
@@ -166,6 +179,24 @@ PROD_CONFIG = {
         "max_spread": 0.55,           # 0.55 — 0.35 резало всех (CLOB часто bid/ask 0.01/0.99 → spread 0.98); 0.55 пропускает широкие, но не мёртвые
         "min_best_level_size": 1.0,   # 1 = только проверка что есть bid/ask; при None size проверка пропускается (см. datafeed)
         "min_book_levels": 1,         # хотя бы 1 уровень с каждой стороны (0 = пустой стакан)
+    },
+    # Дополнительный spread-гейт на вход: отсекаем "слишком узкие/залипшие" книги, где сигнал деградирует.
+    # Важно: если сделок 0 (по логам spread_too_narrow доминирует), опускай порог до 0.01 или 0.0,
+    # иначе статистику не собрать.
+    "entry_spread_min": 0.0,
+    # --- Copy-trading adapter (paper): внешний парсер пишет сигналы в JSON,
+    # бот конвертирует их в BUY-YES ордера и прогоняет через текущий risk manager.
+    "copy_trading": {
+        "enabled": False,
+        "signals_file": "copy_signals.json",
+        "base_size_usd": 300.0,
+        "min_expected_ev": 0.04,
+        "max_entry_price": 0.50,
+        "default_weight": 1.0,
+        # True: copy-сигналы не подмешиваются в рынки с уже открытой позицией (как раньше).
+        # False: открытые позиции НЕ режут copy на входе в адаптер — дальше действуют RiskManager и лимиты;
+        #        PaperTrader усредняет допокупку. Cooldown SL/TP/re-entry по-прежнему учитываются.
+        "exclude_open_positions": True,
     },
     # --- Market-making strategy (ветка Marketmaking-strategy); выключено — приоритет стабильной торговли ---
     "enable_mm": False,
@@ -201,3 +232,7 @@ TELEGRAM_INTERVAL_SEC = 3600 # отчёт в Telegram: раз в час
 PRICE_STREAM_INTERVAL_SEC = 10  # REST fallback: опрос цен каждые 10 сек
 
 # v2.0: n_markets = sum(MARKET_CATEGORIES[c]["markets_limit"] for c in ACTIVE_CATEGORIES)
+
+PROD_CONFIG["copy_trading"]["enabled"] = True
+# Paper / лидеры: иначе статичный copy_signals.json по тем же market_id даёт kept=0 при открытой позиции.
+PROD_CONFIG["copy_trading"]["exclude_open_positions"] = False

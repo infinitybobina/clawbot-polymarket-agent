@@ -65,6 +65,7 @@ from experiment_logger import (
     median_tte_sec_from_candidates,
     median_clob_vol_from_candidates,
 )
+from copy_trading import build_copy_signals
 
 try:
     from telegram_notify import send_telegram_message
@@ -116,6 +117,22 @@ def _order_has_book(order: dict, datafeed: ClawBotDataFeed) -> bool:
         return False
     m = datafeed.markets[mid]
     return getattr(m, "yes_bid", None) is not None and getattr(m, "yes_ask", None) is not None
+
+
+def _signal_is_copy(s: dict) -> bool:
+    return str(s.get("source") or "").strip().lower() == "copy"
+
+
+def _mid_short(mid: str, n: int = 16) -> str:
+    if not mid:
+        return ""
+    return (mid[:n] + "..") if len(mid) > n else mid
+
+
+def _copy_trace_drop(stage: str, mid: str, detail: str = "") -> None:
+    """Диагностика: почему copy-сигнал не дошёл до исполнения (см. лог Copy-tracing)."""
+    extra = f" | {detail}" if detail else ""
+    logger.info("Copy-tracing: %s market=%s%s", stage, _mid_short(mid), extra)
 
 
 _log_file = os.path.join(_root, "clawbot_v2_run.log")
@@ -263,6 +280,9 @@ def check_stops(trader, prices: dict, cfg: dict) -> list:
     loser_stop_hours = float(cfg.get("loser_time_stop_hours", 0) or 0)
     loser_stop_sec = max(0.0, loser_stop_hours * 3600.0)
     loser_min_dd = float(cfg.get("loser_time_stop_min_drawdown", 0) or 0)
+    # Hard max-hold: закрывать позицию по времени независимо от PnL.
+    hard_max_hold_hours = float(cfg.get("hard_max_hold_hours", 0) or 0)
+    hard_max_hold_sec = max(0.0, hard_max_hold_hours * 3600.0)
     # EXPIRY is only valid when we're truly at resolution time.
     # Seeing best_bid<=0.02 with unknown/large TTE is almost always "no reliable price" or token mismatch,
     # and must NOT trigger a forced close.
@@ -283,8 +303,24 @@ def check_stops(trader, prices: dict, cfg: dict) -> list:
         if current_price <= 0:
             continue
         # Тайм-стоп «долго в минусе»: только если знаем opened_ts и есть ликвидируемая цена.
+        opened_ts = pos.get("opened_ts")
+        if hard_max_hold_sec > 0 and opened_ts is not None:
+            try:
+                age_sec_hard = time.time() - float(opened_ts)
+            except (TypeError, ValueError):
+                age_sec_hard = None
+            if age_sec_hard is not None and age_sec_hard >= hard_max_hold_sec:
+                to_close.append(
+                    {
+                        "market_id": mid,
+                        "sell_price": current_price,
+                        "reason": "TIME_STOP",
+                        "trade_id": pos.get("trade_id"),
+                    }
+                )
+                continue
+
         if loser_stop_sec > 0:
-            opened_ts = pos.get("opened_ts")
             if opened_ts is not None:
                 try:
                     age_sec = time.time() - float(opened_ts)
@@ -375,6 +411,17 @@ async def main_loop() -> None:
         )
     logger.info("ClawBot v2.0: PAPER MODE ONLY (no real orders will be sent).")
     logger.info("Config mm_params: %s", "present" if cfg.get("mm_params") else "MISSING (MM блок не будет выполняться)")
+    base_runs = int(cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+    pol_runs = int(cfg.get("sl_cooldown_runs_politics", base_runs * 4))
+    geo_runs = int(cfg.get("sl_cooldown_runs_geopolitics", base_runs * 4))
+    logger.info(
+        "Cooldown config: SL/TIME_STOP/EXPIRY base=%dr politics=%dr geopolitics=%dr tp=%dr reentry=%smin",
+        base_runs,
+        pol_runs,
+        geo_runs,
+        int(cfg.get("tp_cooldown_runs", DEFAULT_TP_RUNS)),
+        cfg.get("reentry_cooldown_minutes", 60),
+    )
 
     # --- Shutdown diagnostics (Windows-friendly): helps explain "bot stopped while unattended" ---
     shutdown_diag: dict = {"signal": None, "ts_utc": None}
@@ -478,7 +525,10 @@ async def main_loop() -> None:
     exp_logger = ExperimentLogger(profile_15m, _root)
     logger.info("Experiment profile: %s", profile_15m)
 
-    async with ClawBotDataFeed() as datafeed:
+    async with ClawBotDataFeed(
+        gamma_timeout_sec=float(cfg.get("gamma_http_timeout_sec", 60.0)),
+        gamma_retries=int(cfg.get("gamma_http_retries", 5)),
+    ) as datafeed:
         category = cfg.get("markets_category", "both")
         active = [c for c in ACTIVE_CATEGORIES if c in MARKET_CATEGORIES]
 
@@ -1007,23 +1057,106 @@ async def main_loop() -> None:
                     expiry_closed = [c["market_id"] for c in closed if c.get("reason") == "EXPIRY"]
                     time_stop_closed = [c["market_id"] for c in closed if c.get("reason") == "TIME_STOP"]
                     if sl_closed:
-                        sl_cooldown = add_to_cooldown(sl_cooldown, sl_closed, runs=cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+                        base_runs = int(cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+                        pol_runs = int(cfg.get("sl_cooldown_runs_politics", base_runs * 4))
+                        geo_runs = int(cfg.get("sl_cooldown_runs_geopolitics", base_runs * 4))
+                        pol = []
+                        geo = []
+                        other = []
+                        for mid in sl_closed:
+                            cat = _market_category(mid, datafeed)
+                            if cat == "politics":
+                                pol.append(mid)
+                            elif cat == "geopolitics":
+                                geo.append(mid)
+                            else:
+                                other.append(mid)
+                        if other:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, other, runs=base_runs)
+                        if pol:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, pol, runs=pol_runs)
+                        if geo:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, geo, runs=geo_runs)
                         save_cooldown(_root, sl_cooldown)
+                        logger.info(
+                            "SL cooldown applied: base=%dr (other=%d) politics=%dr (n=%d) geopolitics=%dr (n=%d)",
+                            base_runs,
+                            len(other),
+                            pol_runs,
+                            len(pol),
+                            geo_runs,
+                            len(geo),
+                        )
                     if tp_closed:
                         tp_cooldown = add_to_cooldown(tp_cooldown, tp_closed, runs=cfg.get("tp_cooldown_runs", DEFAULT_TP_RUNS))
                         save_tp_cooldown(_root, tp_cooldown)
                     if expiry_closed:
-                        sl_cooldown = add_to_cooldown(sl_cooldown, expiry_closed, runs=cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+                        base_runs = int(cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+                        pol_runs = int(cfg.get("sl_cooldown_runs_politics", base_runs * 4))
+                        geo_runs = int(cfg.get("sl_cooldown_runs_geopolitics", base_runs * 4))
+                        pol = []
+                        geo = []
+                        other = []
+                        for mid in expiry_closed:
+                            cat = _market_category(mid, datafeed)
+                            if cat == "politics":
+                                pol.append(mid)
+                            elif cat == "geopolitics":
+                                geo.append(mid)
+                            else:
+                                other.append(mid)
+                        if other:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, other, runs=base_runs)
+                        if pol:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, pol, runs=pol_runs)
+                        if geo:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, geo, runs=geo_runs)
                         save_cooldown(_root, sl_cooldown)
-                        logger.info("EXPIRY cooldown: %d market(s) added for %d runs (no re-entry)", len(expiry_closed), cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+                        logger.info(
+                            "EXPIRY cooldown applied: base=%dr (other=%d) politics=%dr (n=%d) geopolitics=%dr (n=%d)",
+                            base_runs,
+                            len(other),
+                            pol_runs,
+                            len(pol),
+                            geo_runs,
+                            len(geo),
+                        )
                     if time_stop_closed:
                         # TIME_STOP = управляемый выход из минуса → тоже блокируем ре-энтри как после SL.
-                        sl_cooldown = add_to_cooldown(sl_cooldown, time_stop_closed, runs=cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+                        base_runs = int(cfg.get("sl_cooldown_runs", DEFAULT_RUNS))
+                        pol_runs = int(cfg.get("sl_cooldown_runs_politics", base_runs * 4))
+                        geo_runs = int(cfg.get("sl_cooldown_runs_geopolitics", base_runs * 4))
+                        pol = []
+                        geo = []
+                        other = []
+                        for mid in time_stop_closed:
+                            cat = _market_category(mid, datafeed)
+                            if cat == "politics":
+                                pol.append(mid)
+                            elif cat == "geopolitics":
+                                geo.append(mid)
+                            else:
+                                other.append(mid)
+                        if other:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, other, runs=base_runs)
+                        if pol:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, pol, runs=pol_runs)
+                        if geo:
+                            sl_cooldown = add_to_cooldown(sl_cooldown, geo, runs=geo_runs)
                         save_cooldown(_root, sl_cooldown)
                         logger.info(
                             "TIME_STOP cooldown: %d market(s) added for %d runs (no re-entry)",
                             len(time_stop_closed),
-                            cfg.get("sl_cooldown_runs", DEFAULT_RUNS),
+                            base_runs,
+                        )
+                        logger.info(
+                            "TIME_STOP cooldown applied: base=%dr (other=%d) politics=%dr (n=%d) geopolitics=%dr (n=%d)",
+                            base_runs,
+                            len(other),
+                            pol_runs,
+                            len(pol),
+                            geo_runs,
+                            len(geo),
                         )
                     for c in closed:
                         logger.info("PAPER CLOSE market=%s %s PnL $%.2f", c["market_id"][:12], c.get("level_msg", c.get("reason")), c.get("pnl_usd", 0))
@@ -1044,10 +1177,12 @@ async def main_loop() -> None:
                             if mid and mid in datafeed.markets:
                                 cat = _market_category(mid, datafeed).capitalize()
                             lvl = (c.get("level_msg") or "").strip()
+                            is_copy = str(c.get("source") or c.get("strategy_id") or "").strip().lower() == "copy"
+                            copy_bit = "[COPY] " if is_copy else ""
                             cat_bit = f"[{cat}] " if cat else ""
                             # Одна строка на сделку: причина, категория, название, деталь выхода, PnL
                             lines.append(
-                                f"{cat_bit}[{reason}] {title}\n  {lvl} | PnL ${pnl:,.2f}"
+                                f"{copy_bit}{cat_bit}[{reason}] {title}\n  {lvl} | PnL ${pnl:,.2f}"
                             )
                         # If many closes at once, keep the message readable.
                         head = lines[:6]
@@ -1200,6 +1335,7 @@ async def main_loop() -> None:
                     # Same thresholds as entry-guard, but applied earlier (candidate stage).
                     pre_llm_bid_min = float(cfg.get("entry_bid_min", 0.05))
                     pre_llm_ask_max = float(cfg.get("entry_ask_max", 0.95))
+                    pre_llm_spread_min = float(cfg.get("entry_spread_min", 0.0))
                     pre_llm_spread_max = float(cfg.get("entry_spread_max", 0.25))
                     pre_llm_tte_min_sec = float(cfg.get("min_time_to_expiry_sec", 7200))
                     if candidates:
@@ -1219,6 +1355,9 @@ async def main_loop() -> None:
                                 rej["bad_bid_ask"] = rej.get("bad_bid_ask", 0) + 1
                                 continue
                             spread = af - bf
+                            if spread < pre_llm_spread_min:
+                                rej["spread_too_narrow"] = rej.get("spread_too_narrow", 0) + 1
+                                continue
                             if bf < pre_llm_bid_min or af > pre_llm_ask_max or spread > pre_llm_spread_max:
                                 rej["tail_or_wide"] = rej.get("tail_or_wide", 0) + 1
                                 continue
@@ -1237,11 +1376,12 @@ async def main_loop() -> None:
                         if dropped > 0:
                             parts = " ".join(f"{k}={v}" for k, v in sorted(rej.items(), key=lambda kv: (-kv[1], kv[0])))
                             logger.info(
-                                "Pre-LLM screening: %d -> %d candidates (bid>=%.2f ask<=%.2f spread<=%.2f tte>=%ds if present). dropped=%d reasons: %s",
+                                "Pre-LLM screening: %d -> %d candidates (bid>=%.2f ask<=%.2f %.2f<=spread<=%.2f tte>=%ds if present). dropped=%d reasons: %s",
                                 before_pre_llm,
                                 len(candidates),
                                 pre_llm_bid_min,
                                 pre_llm_ask_max,
+                                pre_llm_spread_min,
                                 pre_llm_spread_max,
                                 int(pre_llm_tte_min_sec),
                                 dropped,
@@ -1274,6 +1414,72 @@ async def main_loop() -> None:
                             tp_pct=cfg.get("tp_pct", 0.18),
                         )
                         signals = strategy.generate_signals(candidates)
+                        copy_cfg = cfg.get("copy_trading") or {}
+                        if bool(copy_cfg.get("enabled", False)):
+                            copy_exclude: set = set(sl_cooldown_ids | tp_cooldown_ids | reentry_cooldown_ids | excluded_markets)
+                            if bool(copy_cfg.get("exclude_open_positions", True)):
+                                copy_exclude |= open_market_ids
+                            copy_signals, copy_stats = build_copy_signals(
+                                root_dir=_root,
+                                copy_cfg=copy_cfg,
+                                markets_by_id=datafeed.markets,
+                                exclude_ids=copy_exclude,
+                                sl_pct=cfg.get("sl_pct", 0.04),
+                                tp_pct=cfg.get("tp_pct", 0.18),
+                            )
+                            if copy_stats.get("raw", 0) > 0:
+                                logger.info(
+                                    "Copy-trading adapter: raw=%d kept=%d excluded=%d missing_market=%d entry_too_high=%d bad_record=%d file=%s",
+                                    copy_stats.get("raw", 0),
+                                    copy_stats.get("kept", 0),
+                                    copy_stats.get("excluded", 0),
+                                    copy_stats.get("missing_market", 0),
+                                    copy_stats.get("entry_too_high", 0),
+                                    copy_stats.get("bad_record", 0),
+                                    copy_cfg.get("signals_file", "copy_signals.json"),
+                                )
+                            if copy_signals:
+                                signals.extend(copy_signals)
+                                # Deduplicate by market_id: keep the strongest expected_ev.
+                                by_market: dict[str, dict] = {}
+                                for s in signals:
+                                    mid = str(s.get("market_id") or "")
+                                    if not mid:
+                                        continue
+                                    try:
+                                        ev = float(s.get("expected_ev") or 0.0)
+                                    except (TypeError, ValueError):
+                                        ev = 0.0
+                                    prev = by_market.get(mid)
+                                    if prev is None:
+                                        by_market[mid] = s
+                                        continue
+                                    try:
+                                        prev_ev = float(prev.get("expected_ev") or 0.0)
+                                    except (TypeError, ValueError):
+                                        prev_ev = 0.0
+                                    if ev >= prev_ev:
+                                        if _signal_is_copy(prev):
+                                            ws = str(s.get("source") or "").strip().lower() or "llm"
+                                            _copy_trace_drop(
+                                                "dedupe_lost_to_higher_ev",
+                                                mid,
+                                                f"dropped_copy_ev={prev_ev:.4f} kept_ev={ev:.4f} kept_source={ws}",
+                                            )
+                                        by_market[mid] = s
+                                    else:
+                                        if _signal_is_copy(s):
+                                            ws = str(prev.get("source") or "").strip().lower() or "llm"
+                                            _copy_trace_drop(
+                                                "dedupe_lost_to_higher_ev",
+                                                mid,
+                                                f"dropped_copy_ev={ev:.4f} kept_ev={prev_ev:.4f} kept_source={ws}",
+                                            )
+                                signals = list(by_market.values())
+                                logger.info(
+                                    "Signals merged (LLM/simple + copy): total=%d",
+                                    len(signals),
+                                )
                         for s in signals:
                             s["category"] = _market_category(s.get("market_id"), datafeed)
                         # Sanity-filter: for BUY_YES we require limit_price <= 0.50 (otherwise edge <= 0).
@@ -1288,6 +1494,8 @@ async def main_loop() -> None:
                                 lp = 0.5
                             side = str(s.get("side") or s.get("action") or "BUY_YES").upper()
                             if "BUY" in side and "YES" in side and lp > 0.50:
+                                if _signal_is_copy(s):
+                                    _copy_trace_drop("sanity_buy_yes_limit_gt_50", str(s.get("market_id") or ""), f"limit_price={lp:.4f}")
                                 if len(dropped_examples) < 3:
                                     dropped_examples.append((s.get("market_id") or "", lp, s.get("category") or ""))
                                 continue
@@ -1315,12 +1523,52 @@ async def main_loop() -> None:
 
                         # Фильтр по min_edge категории
                         n_before = len(signals)
-                        signals = [
-                            s for s in signals
-                            if (0.50 - float(s.get("limit_price") or 0.5)) >= float(MARKET_CATEGORIES.get(s.get("category") or "", {}).get("min_edge", 0.05))
-                        ]
+                        kept_me: list = []
+                        for s in signals:
+                            lp = float(s.get("limit_price") or 0.5)
+                            edge = 0.50 - lp
+                            cat = s.get("category") or ""
+                            min_edge = float(MARKET_CATEGORIES.get(cat, {}).get("min_edge", 0.05))
+                            if edge >= min_edge:
+                                kept_me.append(s)
+                            elif _signal_is_copy(s):
+                                _copy_trace_drop(
+                                    "category_min_edge",
+                                    str(s.get("market_id") or ""),
+                                    f"edge={edge:.4f} min_edge={min_edge:.4f} cat={cat}",
+                                )
+                        signals = kept_me
                         if n_before > len(signals):
                             logger.info("Category min_edge filter: %d -> %d signals", n_before, len(signals))
+                        # Entry score floor: системный гейт против слабых LLM сигналов.
+                        entry_min_llm_score = float(cfg.get("entry_min_llm_score", 0.0) or 0.0)
+                        if entry_min_llm_score > 0 and signals:
+                            before_score = len(signals)
+                            score_reject = 0
+                            filtered_signals = []
+                            for s in signals:
+                                src = str(s.get("source") or "").strip().lower()
+                                # Copy-trading signals already passed external filter; don't double-gate by llm_score.
+                                if src == "copy":
+                                    filtered_signals.append(s)
+                                    continue
+                                raw_score = s.get("expected_ev", s.get("llm_score"))
+                                try:
+                                    score = float(raw_score if raw_score is not None else 0.0)
+                                except (TypeError, ValueError):
+                                    score = 0.0
+                                if score < entry_min_llm_score:
+                                    score_reject += 1
+                                    continue
+                                filtered_signals.append(s)
+                            signals = filtered_signals
+                            if score_reject > 0:
+                                logger.info(
+                                    "Entry llm_score floor: dropped %d/%d signals (required >= %.2f)",
+                                    score_reject,
+                                    before_score,
+                                    entry_min_llm_score,
+                                )
                         risk_mgr = RiskManager()
                         risk_mgr.config["max_single_market_pct"] = cfg["risk_per_trade"]
                         risk_mgr.config["max_category_pct"] = cfg["max_category_pct"]
@@ -1344,14 +1592,32 @@ async def main_loop() -> None:
                         for mid, size in risk_mgr.portfolio.positions.items():
                             cat = _market_category(mid, datafeed)
                             risk_mgr.portfolio.exposure_by_category[cat] = risk_mgr.portfolio.exposure_by_category.get(cat, 0) + size
+                        copy_mids_pre_risk = {
+                            str(s.get("market_id") or "")
+                            for s in signals
+                            if _signal_is_copy(s) and str(s.get("market_id") or "")
+                        }
                         risk_result = risk_mgr.process_signals(signals)
                         approved_orders = risk_result["approved_orders"]
                         if risk_result.get("rejected_signals"):
                             for i, reason in enumerate(risk_result["rejected_signals"]):
                                 logger.warning("Risk rejected signal %d: %s", i + 1, reason)
+                        approved_mids_risk = {o.get("market_id") for o in approved_orders if o.get("market_id")}
+                        for mid in copy_mids_pre_risk:
+                            if mid not in approved_mids_risk:
+                                _copy_trace_drop("risk_not_approved", mid, "check Risk rejected lines above")
                         pct_vol = cfg.get("max_trade_pct_of_volume", 0.05)
                         pct_depth = cfg.get("max_trade_pct_of_depth", 0.10)
+                        copy_mids_pre_book = {
+                            o.get("market_id")
+                            for o in approved_orders
+                            if o.get("market_id") and str(o.get("source") or "").strip().lower() == "copy"
+                        }
                         approved_orders = [o for o in approved_orders if _order_has_book(o, datafeed)]
+                        approved_mids_book = {o.get("market_id") for o in approved_orders if o.get("market_id")}
+                        for mid in copy_mids_pre_book:
+                            if mid not in approved_mids_book:
+                                _copy_trace_drop("no_yes_book_after_risk", mid, "dropped by _order_has_book")
                         if len(risk_result["approved_orders"]) != len(approved_orders):
                             logger.info("Dropped %d orders (no yes_bid/yes_ask); executing %d", len(risk_result["approved_orders"]) - len(approved_orders), len(approved_orders))
                         for order in approved_orders:
@@ -1383,10 +1649,16 @@ async def main_loop() -> None:
                         # Goal: collect 5–10 trades only in "live" markets (non 0.01/0.99 regime) with TTE >= 2h.
                         entry_bid_min = float(cfg.get("entry_bid_min", 0.05))
                         entry_ask_max = float(cfg.get("entry_ask_max", 0.95))
+                        entry_spread_min = float(cfg.get("entry_spread_min", 0.0))
                         entry_spread_max = float(cfg.get("entry_spread_max", 0.25))
                         entry_tte_min_sec = float(cfg.get("min_time_to_expiry_sec", 7200))
                         if approved_orders:
                             before_entry_guard = len(approved_orders)
+                            copy_mids_pre_entry_guard = {
+                                o.get("market_id")
+                                for o in approved_orders
+                                if o.get("market_id") and str(o.get("source") or "").strip().lower() == "copy"
+                            }
                             kept = []
                             rejected_reasons: dict[str, int] = {}
                             for o in approved_orders:
@@ -1420,26 +1692,43 @@ async def main_loop() -> None:
                                     if tte_f < entry_tte_min_sec:
                                         rejected_reasons["tte_too_low"] = rejected_reasons.get("tte_too_low", 0) + 1
                                         continue
+                                if spread < entry_spread_min:
+                                    rejected_reasons["spread_too_narrow"] = rejected_reasons.get("spread_too_narrow", 0) + 1
+                                    continue
                                 if bf < entry_bid_min or af > entry_ask_max or spread > entry_spread_max:
                                     rejected_reasons["tail_or_wide"] = rejected_reasons.get("tail_or_wide", 0) + 1
                                     continue
                                 kept.append(o)
                             approved_orders = kept
                             dropped = before_entry_guard - len(approved_orders)
+                            copy_mids_post_entry_guard = {
+                                o.get("market_id")
+                                for o in approved_orders
+                                if o.get("market_id") and str(o.get("source") or "").strip().lower() == "copy"
+                            }
+                            for mid in copy_mids_pre_entry_guard:
+                                if mid not in copy_mids_post_entry_guard:
+                                    _copy_trace_drop("entry_guard_rejected", mid, "see Entry guard WARNING reasons above")
                             if dropped > 0:
                                 parts = " ".join(f"{k}={v}" for k, v in sorted(rejected_reasons.items(), key=lambda kv: (-kv[1], kv[0])))
                                 logger.warning(
-                                    "Entry guard: dropped %d/%d orders (bid>=%.2f ask<=%.2f spread<=%.2f tte>=%ds). reasons: %s",
+                                    "Entry guard: dropped %d/%d orders (bid>=%.2f ask<=%.2f %.2f<=spread<=%.2f tte>=%ds). reasons: %s",
                                     dropped,
                                     before_entry_guard,
                                     entry_bid_min,
                                     entry_ask_max,
+                                    entry_spread_min,
                                     entry_spread_max,
                                     int(entry_tte_min_sec),
                                     parts or "-",
                                 )
                         max_new_slot = int(cfg.get("max_new_trades_per_llm_slot") or 0)
                         if approved_orders and max_new_slot > 0:
+                            copy_mids_pre_slot = {
+                                o.get("market_id")
+                                for o in approved_orders
+                                if o.get("market_id") and str(o.get("source") or "").strip().lower() == "copy"
+                            }
                             filtered_slot: list = []
                             new_in_slot = 0
                             for o in approved_orders:
@@ -1451,6 +1740,18 @@ async def main_loop() -> None:
                                     new_in_slot += 1
                                 filtered_slot.append(o)
                             dropped_slot = len(approved_orders) - len(filtered_slot)
+                            copy_mids_post_slot = {
+                                o.get("market_id")
+                                for o in filtered_slot
+                                if o.get("market_id") and str(o.get("source") or "").strip().lower() == "copy"
+                            }
+                            for mid in copy_mids_pre_slot:
+                                if mid not in copy_mids_post_slot:
+                                    _copy_trace_drop(
+                                        "max_new_trades_per_llm_slot",
+                                        mid,
+                                        f"cap={max_new_slot}",
+                                    )
                             if dropped_slot:
                                 logger.warning(
                                     "max_new_trades_per_llm_slot=%d: dropped %d new-market order(s); executing %d",
@@ -1460,6 +1761,13 @@ async def main_loop() -> None:
                                 )
                             approved_orders = filtered_slot
                         if approved_orders:
+                            for o in approved_orders:
+                                if str(o.get("source") or "").strip().lower() == "copy":
+                                    logger.info(
+                                        "Copy-tracing: executing market=%s final_size_usd=%s",
+                                        _mid_short(str(o.get("market_id") or "")),
+                                        o.get("final_size_usd") or o.get("target_size_usd"),
+                                    )
                             execution_result = trader.execute_orders(approved_orders)
                             ex_cost_by_mid = {
                                 (ex.get("market_id") or ""): float(ex.get("cost_usd") or 0)
@@ -1526,9 +1834,16 @@ async def main_loop() -> None:
                                     "book_ok_at_entry": book_ok_at_entry,
                                     "yes_token_id": yes_tid,
                                 }
-                                trade_id = log_trade_open(position_state, llm_decision, market_diag, strategy_id=profile_15m)
+                                # Persist copy-trading origin in trades.strategy_id for analytics.
+                                # Existing flow keeps profile_15m for non-copy entries.
+                                order_source = str(order.get("source") or "").strip().lower()
+                                trade_strategy_id = "copy" if order_source == "copy" else profile_15m
+                                trade_id = log_trade_open(position_state, llm_decision, market_diag, strategy_id=trade_strategy_id)
                                 if trade_id is not None:
                                     trader.positions[mid]["trade_id"] = trade_id
+                                # Remember source on position for downstream telemetry (e.g., Telegram, analytics).
+                                if order_source:
+                                    trader.positions[mid]["source"] = order_source
                                 ttl = _market_display_title(mid, datafeed)
                                 if ttl:
                                     trader.positions[mid]["market_title"] = ttl
@@ -1566,14 +1881,16 @@ async def main_loop() -> None:
                                                 book_line = f"Book: bid={float(b):.3f} ask={float(a):.3f} spr={(float(a)-float(b)):.3f}\n"
                                         except (TypeError, ValueError):
                                             book_line = ""
-                                    await send_telegram_message(
-                                        f"ClawBot v2 LIVE{cat_label}\n"
-                                        f"BUY {mid_preview} ${spent_usd:,.0f} @{price:.3f}\n"
-                                        + (f"Market: {market_label}\n" if market_label else "")
-                                        + book_line
-                                        + f"LLM EV (заявл.): {ev_f * 100:.1f}%\n"
-                                        + f"0.5-entry: {edge_vs_half_pct:.1f}% (эвристика, не PnL)"
-                                    )
+                            is_copy = str(order.get("source") or "").strip().lower() == "copy"
+                            copy_tag = " [COPY]" if is_copy else ""
+                            await send_telegram_message(
+                                f"ClawBot v2 LIVE{cat_label}{copy_tag}\n"
+                                f"BUY {mid_preview} ${spent_usd:,.0f} @{price:.3f}\n"
+                                + (f"Market: {market_label}\n" if market_label else "")
+                                + book_line
+                                + f"LLM EV (заявл.): {ev_f * 100:.1f}%\n"
+                                + f"0.5-entry: {edge_vs_half_pct:.1f}% (эвристика, не PnL)"
+                            )
                         else:
                             logger.info("LLM slot: %d signals, 0 approved", len(signals))
 

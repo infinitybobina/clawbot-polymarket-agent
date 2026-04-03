@@ -72,7 +72,10 @@ async def main():
     logger.info("TELEGRAM_TOKEN set: %s | TELEGRAM_CHAT_ID set: %s", bool(os.getenv("TELEGRAM_TOKEN")), bool(os.getenv("TELEGRAM_CHAT_ID")))
 
     # Blocks 1+2+3 с параметрами из config
-    async with ClawBotDataFeed() as datafeed:
+    async with ClawBotDataFeed(
+        gamma_timeout_sec=float(cfg.get("gamma_http_timeout_sec", 60.0)),
+        gamma_retries=int(cfg.get("gamma_http_retries", 5)),
+    ) as datafeed:
         category = cfg.get("markets_category", "politics")
         markets = []
         if category == "crypto":

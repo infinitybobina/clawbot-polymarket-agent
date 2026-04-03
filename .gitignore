@@ -39,7 +39,11 @@ results_*.csv
 results_*.json
 sl_cooldown.json
 tp_cooldown.json
+reentry_cooldown.json
 portfolio_state.json
+# Локальные сигналы копи-трейдинга (в репозитории — *.sample.json)
+copy_signals.json
+source_signals.json
 bot_session.json
 
 # IDE / редактор

@@ -21,9 +21,9 @@ while ($true) {
     }
 
     Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Starting ClawBot v2..."
-    $p = Start-Process -FilePath "python" -ArgumentList "main_v2.py" -WorkingDirectory $scriptDir -PassThru -NoNewWindow
-    $p.WaitForExit()
-    $code = $p.ExitCode
+    # ВАЖНО (Windows): запускаем напрямую, иначе Ctrl+C может не доходить до дочернего python.
+    & python "main_v2.py"
+    $code = $LASTEXITCODE
     Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Process exited with code $code. Restarting in $restartDelaySec sec..."
 
     Start-Sleep -Seconds $restartDelaySec
